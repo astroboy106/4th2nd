@@ -556,7 +556,7 @@ heroF.cv.parentElement.addEventListener('click',e=>{const F=heroF;if(RM||!F.gl||
 heroF.cv.parentElement.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const b=heroF.cv.getBoundingClientRect();heroF.mx=e.clientX-b.left;heroF.my=e.clientY-b.top});
 document.querySelectorAll('canvas[data-num]').forEach(c=>addField(c,numRows(c.dataset.num),{replay:1,spread:2.2,a:.7,idle:2600,place:()=>({fw:.96,fh:.92,ox:0,oy:0})}));
 $('rail').innerHTML=ips.map((p,i)=>'<article class="card rv" style="--d:'+(i*.06)+'s"><div class="ipc"><span class="st'+(p.on?'':' off')+'"><span class="sq"></span>'+esc(p.st)+'</span><canvas data-k="'+p.k+'" aria-hidden="true"></canvas></div><div class="cb"><span class="cr">'+esc(p.cr)+'</span><h3>'+esc(p.t)+'</h3><p>'+esc(p.d)+'</p></div></article>').join('');
-{const cards=[...$('rail').children],VID={gaunt:'gauntlet',thelma:'thelma'},vd=$('vd'),vv=$('vv'),btns=[];
+{const cards=[...$('rail').children],VID={connie:'coney',anne:'ani',gaunt:'gauntlet',thelma:'thelma'},vd=$('vd'),vv=$('vv'),btns=[];
  const close=()=>{vd.classList.remove('on');vd.setAttribute('aria-hidden','true');vv.pause()};
  ips.forEach((p,i)=>{const v=VID[p.k];if(!v)return;const vb=document.createElement('button');vb.className='vbtn';vb.innerHTML='<i></i><span></span>';cards[i].querySelector('.cb').appendChild(vb);btns.push(vb);
   vb.addEventListener('click',e=>{e.stopPropagation();if(vv.dataset.v!==v){vv.dataset.v=v;vv.poster=v+'.jpg';vv.src=v+'.mp4'}vd.classList.add('on');vd.setAttribute('aria-hidden','false');vv.currentTime=0;vv.play().catch(()=>{})})});
