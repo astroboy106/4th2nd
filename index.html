@@ -146,8 +146,8 @@ h1 .m{color:rgba(230,228,230,.42)}
 .vbtn{justify-self:start;margin-top:6px;height:40px;padding:0 16px;display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--fg);background:#163a2c;box-shadow:inset 0 0 0 1px #24493a,0 4px 0 #04100a;transition:transform .15s,box-shadow .15s}
 .vbtn:active{transform:translateY(3px);box-shadow:inset 0 0 0 1px #24493a,0 1px 0 #04100a}
 .vbtn i{width:9px;height:10px;background:var(--ac);clip-path:polygon(0 0,100% 50%,0 100%)}
-.vd{position:fixed;inset:0;z-index:80;background:rgba(3,10,6,.92);display:grid;place-items:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
-.vd.on{opacity:1;pointer-events:auto}
+.vd{position:fixed;inset:0;z-index:80;background:rgba(3,10,6,.92);display:grid;place-items:center;padding:20px;opacity:0;pointer-events:none;visibility:hidden;transition:opacity .25s,visibility 0s linear .25s}
+.vd.on{opacity:1;pointer-events:auto;visibility:visible;transition:opacity .25s,visibility 0s}
 .vd .vbox{width:min(1100px,100%);position:relative}
 .vd video{width:100%;height:auto;max-height:80vh;background:#000;display:block}
 .vd .vx{position:absolute;right:0;top:-52px;width:44px;height:44px;background:#163a2c;color:var(--fg);font-size:20px;line-height:44px;text-align:center}
@@ -557,7 +557,7 @@ heroF.cv.parentElement.addEventListener('pointermove',e=>{if(e.pointerType!=='mo
 document.querySelectorAll('canvas[data-num]').forEach(c=>addField(c,numRows(c.dataset.num),{replay:1,spread:2.2,a:.7,idle:2600,place:()=>({fw:.96,fh:.92,ox:0,oy:0})}));
 $('rail').innerHTML=ips.map((p,i)=>'<article class="card rv" style="--d:'+(i*.06)+'s"><div class="ipc"><span class="st'+(p.on?'':' off')+'"><span class="sq"></span>'+esc(p.st)+'</span><canvas data-k="'+p.k+'" aria-hidden="true"></canvas></div><div class="cb"><span class="cr">'+esc(p.cr)+'</span><h3>'+esc(p.t)+'</h3><p>'+esc(p.d)+'</p></div></article>').join('');
 {const cards=[...$('rail').children],VID={connie:'coney',anne:'ani',gaunt:'gauntlet',thelma:'thelma'},vd=$('vd'),vv=$('vv'),btns=[];
- const close=()=>{vd.classList.remove('on');vd.setAttribute('aria-hidden','true');vv.pause()};
+ const close=()=>{vd.classList.remove('on');vd.setAttribute('aria-hidden','true');vv.pause();setTimeout(()=>{if(!vd.classList.contains('on')){vv.removeAttribute('src');vv.load();delete vv.dataset.v}},300)};
  ips.forEach((p,i)=>{const v=VID[p.k];if(!v)return;const vb=document.createElement('button');vb.className='vbtn';vb.innerHTML='<i></i><span></span>';cards[i].querySelector('.cb').appendChild(vb);btns.push(vb);
   vb.addEventListener('click',e=>{e.stopPropagation();if(vv.dataset.v!==v){vv.dataset.v=v;vv.poster=v+'.jpg';vv.src=v+'.mp4'}vd.classList.add('on');vd.setAttribute('aria-hidden','false');vv.currentTime=0;vv.play().catch(()=>{})})});
  const lb=()=>btns.forEach(b=>{b.lastChild.textContent=LANG==='en'?'Watch promo film':'프로모션 영상 보기'});lb();L10N.push(lb);
