@@ -204,8 +204,8 @@ h1 .m{color:rgba(230,228,230,.42)}
 .cta .cv img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .5s}
 .cta .cv.rev img{opacity:1}
 .cta .cv canvas{z-index:1}
-.cta h2 .m{display:block;text-align:right}
-.cta h2{font-size:clamp(38px,6vw,88px);letter-spacing:-.05em;line-height:1}
+.cta h2 span{display:inline-block}
+.cta h2{font-size:clamp(36px,6vw,88px);letter-spacing:-.05em;line-height:1.1;text-align:center;white-space:nowrap}
 .mail{margin-top:32px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .mail span{font-size:clamp(16px,1.8vw,20px);padding:10px 16px;background:#0f241a;border-radius:0;box-shadow:inset 0 0 0 1px #1f3d30;word-break:break-all}
 .copied{min-height:22px;margin-top:12px;font-size:13px;color:var(--mu)}
@@ -360,8 +360,7 @@ html{scroll-behavior:auto}
   <div class="wrap cta">
     <div class="cv"><img src="logo.jpg" alt="4th CREATIVE PARTY 로고"><canvas id="ctaCv" aria-hidden="true"></canvas></div>
     <div>
-      <div class="lbl rv" style="margin-bottom:24px" data-en="&lt;span class=&quot;sq p&quot;&gt;&lt;/span&gt;Open for new projects"><span class="sq p"></span>새 프로젝트 상담 가능</div>
-      <h2 class="rv" data-en="Let&#x27;s talk about&lt;br&gt;&lt;span class=&quot;m&quot;&gt;your next film.&lt;/span&gt;">다음 작품을<br><span class="m">같이 이야기해요.</span></h2>
+      <h2 class="rv" id="ctaH" data-en="&lt;span&gt;Anyone, anywhere, anything.&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;m&quot;&gt;Let&#x27;s make it together&lt;/span&gt;"><span>누구든 어디든 무엇이든</span><br><span class="m">같이 만들어 봅시다</span></h2>
       <div class="mail rv"><span>yizeon@4thparty.co.kr</span><button class="key o" id="copy" data-en="Copy address">주소 복사</button></div>
       <div class="copied" id="copied" aria-live="polite"></div>
     </div>
@@ -658,6 +657,8 @@ addEventListener('scroll',onScroll,{passive:true});onScroll();
 }
 
 document.querySelectorAll('.aw').forEach(ul=>ul.addEventListener('click',e=>{const li=e.target.closest('li');if(!li)return;const was=li.classList.contains('sel');document.querySelectorAll('.aw li.sel').forEach(x=>x.classList.remove('sel'));if(!was)li.classList.add('sel')}));
+
+{const h=document.getElementById('ctaH');const fit=()=>{h.style.fontSize='';const W=h.clientWidth,m=Math.max(...[...h.querySelectorAll('span')].map(x=>x.offsetWidth));if(m>W)h.style.fontSize=(parseFloat(getComputedStyle(h).fontSize)*W/m*.98)+'px'};fit();addEventListener('resize',fit);new MutationObserver(fit).observe(h,{childList:true});document.fonts&&document.fonts.ready.then(fit)}
 </script>
 </body>
 </html>
