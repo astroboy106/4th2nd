@@ -164,12 +164,13 @@ h1 .m{color:rgba(230,228,230,.42)}
 .stair{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;align-items:end;margin-top:40px}
 .step{display:grid;gap:10px}
 .step .b{height:calc(var(--n)*46px);position:relative;display:flex;flex-direction:column-reverse;gap:2px;perspective:500px;font-variant-numeric:tabular-nums;font-size:20px;letter-spacing:-.03em}
-.b .u{height:44px;flex:none;background:#163a2c;box-shadow:inset 0 0 0 1px #21483a;transform-origin:50% 100%;transform:rotateX(-100deg);opacity:0}
-.step:nth-child(3) .u{background:var(--cl);box-shadow:none}.step:last-child .u{background:var(--ac);box-shadow:none}
+.b .u{height:44px;flex:none;display:flex;gap:2px;perspective:400px}
+.b .c{flex:1;min-width:0;background:#163a2c;box-shadow:inset 0 0 0 1px #21483a;transform-origin:var(--o,50% 100%);transform:var(--r,rotateX(-100deg));opacity:0}
+.step:nth-child(3) .c{background:var(--cl);box-shadow:none}.step:last-child .c{background:var(--ac);box-shadow:none}
 .b em{position:absolute;left:12px;top:10px;font-style:normal;z-index:1;opacity:0}
 .step:nth-child(n+3) .b em{color:#07130d}
 .step span{font-size:13px;color:var(--mu);line-height:1.45}
-.stair.on .u{transform:none;opacity:1;transition:transform .9s cubic-bezier(.65,0,.35,1),opacity .25s;transition-delay:calc(var(--q)*140ms)}
+.stair.on .c{transform:none;opacity:1;transition:transform .9s cubic-bezier(.65,0,.35,1),opacity .25s;transition-delay:calc(var(--q)*140ms + var(--j)*55ms)}
 .stair.on .b em{opacity:1;transition:opacity .6s;transition-delay:calc(var(--q)*140ms + .7s)}
 .team{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:40px}
 .team button{text-align:left;background:#0c1d15;border-radius:0;box-shadow:inset 0 0 0 1px #183528;padding:16px 18px;display:grid;gap:2px;transition:background .25s,box-shadow .25s}
@@ -238,7 +239,7 @@ h1{font-size:clamp(30px,8.6vw,40px);margin:14px 0 16px}.sub{font-size:clamp(12px
 @media (prefers-reduced-motion:reduce){
 .blk i{transform:none!important;opacity:1!important}
 *,*::before,*::after{transition:none!important;animation:none!important}
-.js .in,.js .rv{opacity:1!important;transform:none!important}.stair .u{transform:none!important;opacity:1!important}.stair .b em{opacity:1!important}
+.js .in,.js .rv{opacity:1!important;transform:none!important}.stair .c{transform:none!important;opacity:1!important}.stair .b em{opacity:1!important}
 html{scroll-behavior:auto}
 }
 
@@ -626,9 +627,16 @@ if(!RM)setInterval(()=>{if(document.hidden)return;const v=svs.filter(x=>x.classL
 /* reveals */
 const io=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}},{threshold:.08});
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
-{let q=0;document.querySelectorAll('#stair .step').forEach(st=>{const b=st.querySelector('.b'),n=+getComputedStyle(st).getPropertyValue('--n'),y=b.textContent;
- let h='<em style="--q:'+(q+n-1)+'">'+y+'</em>';for(let k=0;k<n;k++)h+='<i class="u" style="--q:'+(q++)+'"></i>';b.innerHTML=h});
- const sio=new IntersectionObserver(es=>{for(const e of es)e.target.classList.toggle('on',e.isIntersecting)},{threshold:.35});sio.observe($('stair'))}
+{let q=0;const R=[['rotateX(-100deg)','50% 100%'],['rotateX(100deg)','50% 0'],['rotateY(100deg)','0 50%'],['rotateY(-100deg)','100% 50%']];
+ const build=()=>{q=0;document.querySelectorAll('#stair .step').forEach(st=>{const b=st.querySelector('.b'),n=+getComputedStyle(st).getPropertyValue('--n');if(!b.dataset.y)b.dataset.y=b.textContent.trim();
+  const w=b.clientWidth||200,k=Math.max(2,Math.round((w+2)/46));
+  let h='<em style="--q:'+(q+n-1)+'">'+b.dataset.y+'</em>';
+  for(let r=0;r<n;r++){h+='<i class="u">';for(let j=0;j<k;j++){const t=R[Math.floor(Math.random()*4)];h+='<b class="c" style="--q:'+q+';--j:'+(Math.random()*k).toFixed(2)+';--r:'+t[0]+';--o:'+t[1]+'"></b>'}h+='</i>';q++}
+  b.innerHTML=h})};
+ build();let lw=innerWidth;addEventListener('resize',()=>{if(innerWidth!==lw){lw=innerWidth;build()}});
+ const stair=$('stair');const sio=new IntersectionObserver(es=>{for(const e of es)e.target.classList.toggle('on',e.isIntersecting)},{threshold:.35});sio.observe(stair);
+ if(!RM)setInterval(()=>{if(!stair.classList.contains('on'))return;const cs=stair.querySelectorAll('.c');for(let m=0;m<2;m++){const c=cs[Math.floor(Math.random()*cs.length)];if(!c||c._f)continue;c._f=1;const ax=Math.random()<.5?'X':'Y',sg=Math.random()<.5?-1:1;
+  c.animate([{transform:'rotate'+ax+'(0deg)'},{transform:'rotate'+ax+'('+(180*sg)+'deg)'},{transform:'rotate'+ax+'('+(360*sg)+'deg)'}],{duration:1400,easing:'cubic-bezier(.65,0,.35,1)'}).onfinish=()=>{c._f=0}}},900)}
 setTimeout(()=>document.querySelectorAll('.rv:not(.on)').forEach(el=>{if(el.getBoundingClientRect().top<innerHeight)el.classList.add('on')}),2500);
 requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.add('ready')));
 const hero=heroF.cv.parentElement;
