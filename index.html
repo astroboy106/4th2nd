@@ -208,6 +208,9 @@ h1 .m{color:rgba(230,228,230,.42)}
 .cta h2{font-size:clamp(36px,6vw,88px);letter-spacing:-.05em;line-height:1.1;text-align:center;white-space:nowrap}
 .mail{margin-top:32px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .mail span{font-size:clamp(16px,1.8vw,20px);padding:10px 16px;background:#0f241a;border-radius:0;box-shadow:inset 0 0 0 1px #1f3d30;word-break:break-all}
+.key .dotcopy{height:18px;width:46px;fill:currentColor;stroke:none;display:block;margin-top:3px;flex:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.pd{display:inline-block;width:.16em;height:.16em;background:currentColor;margin-left:.05em;vertical-align:baseline}
 .copied{min-height:22px;margin-top:12px;font-size:13px;color:var(--mu)}
 .partners{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:28px 44px;padding:8px 0 56px}
 .partners img{height:22px;width:auto;display:block}
@@ -361,7 +364,7 @@ html{scroll-behavior:auto}
     <div class="cv"><img src="logo.jpg" alt="4th CREATIVE PARTY 로고"><canvas id="ctaCv" aria-hidden="true"></canvas></div>
     <div>
       <h2 class="rv" id="ctaH" data-en="&lt;span&gt;Anyone, anywhere, anything.&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;m&quot;&gt;Let&#x27;s make it together&lt;/span&gt;"><span>누구든 어디든 무엇이든</span><br><span class="m">같이 만들어 봅시다</span></h2>
-      <div class="mail rv"><span>yizeon@4thparty.co.kr</span><button class="key o" id="copy" data-en="Copy address">주소 복사</button></div>
+      <div class="mail rv"><span>yizeon@4thparty.co.kr</span><button class="key o" id="copy" aria-label="Copy"><svg class="dotcopy" viewBox="0 0 23 9" aria-hidden="true" fill="currentColor"><rect x="1" y="0" width=".86" height=".86"/><rect x="2" y="0" width=".86" height=".86"/><rect x="3" y="0" width=".86" height=".86"/><rect x="0" y="1" width=".86" height=".86"/><rect x="4" y="1" width=".86" height=".86"/><rect x="0" y="2" width=".86" height=".86"/><rect x="0" y="3" width=".86" height=".86"/><rect x="0" y="4" width=".86" height=".86"/><rect x="0" y="5" width=".86" height=".86"/><rect x="4" y="5" width=".86" height=".86"/><rect x="1" y="6" width=".86" height=".86"/><rect x="2" y="6" width=".86" height=".86"/><rect x="3" y="6" width=".86" height=".86"/><rect x="7" y="2" width=".86" height=".86"/><rect x="8" y="2" width=".86" height=".86"/><rect x="9" y="2" width=".86" height=".86"/><rect x="6" y="3" width=".86" height=".86"/><rect x="10" y="3" width=".86" height=".86"/><rect x="6" y="4" width=".86" height=".86"/><rect x="10" y="4" width=".86" height=".86"/><rect x="6" y="5" width=".86" height=".86"/><rect x="10" y="5" width=".86" height=".86"/><rect x="7" y="6" width=".86" height=".86"/><rect x="8" y="6" width=".86" height=".86"/><rect x="9" y="6" width=".86" height=".86"/><rect x="12" y="2" width=".86" height=".86"/><rect x="13" y="2" width=".86" height=".86"/><rect x="14" y="2" width=".86" height=".86"/><rect x="15" y="2" width=".86" height=".86"/><rect x="12" y="3" width=".86" height=".86"/><rect x="16" y="3" width=".86" height=".86"/><rect x="12" y="4" width=".86" height=".86"/><rect x="16" y="4" width=".86" height=".86"/><rect x="12" y="5" width=".86" height=".86"/><rect x="16" y="5" width=".86" height=".86"/><rect x="12" y="6" width=".86" height=".86"/><rect x="13" y="6" width=".86" height=".86"/><rect x="14" y="6" width=".86" height=".86"/><rect x="15" y="6" width=".86" height=".86"/><rect x="12" y="7" width=".86" height=".86"/><rect x="12" y="8" width=".86" height=".86"/><rect x="18" y="2" width=".86" height=".86"/><rect x="22" y="2" width=".86" height=".86"/><rect x="18" y="3" width=".86" height=".86"/><rect x="22" y="3" width=".86" height=".86"/><rect x="18" y="4" width=".86" height=".86"/><rect x="22" y="4" width=".86" height=".86"/><rect x="18" y="5" width=".86" height=".86"/><rect x="22" y="5" width=".86" height=".86"/><rect x="19" y="6" width=".86" height=".86"/><rect x="20" y="6" width=".86" height=".86"/><rect x="21" y="6" width=".86" height=".86"/><rect x="22" y="6" width=".86" height=".86"/><rect x="22" y="7" width=".86" height=".86"/><rect x="19" y="8" width=".86" height=".86"/><rect x="20" y="8" width=".86" height=".86"/><rect x="21" y="8" width=".86" height=".86"/></svg><span class="sr">Copy</span></button></div>
       <div class="copied" id="copied" aria-live="polite"></div>
     </div>
   </div>
@@ -659,6 +662,12 @@ addEventListener('scroll',onScroll,{passive:true});onScroll();
 document.querySelectorAll('.aw').forEach(ul=>ul.addEventListener('click',e=>{const li=e.target.closest('li');if(!li)return;const was=li.classList.contains('sel');document.querySelectorAll('.aw li.sel').forEach(x=>x.classList.remove('sel'));if(!was)li.classList.add('sel')}));
 
 {const h=document.getElementById('ctaH');const fit=()=>{h.style.fontSize='';const W=h.clientWidth,m=Math.max(...[...h.querySelectorAll('span')].map(x=>x.offsetWidth));if(m>W)h.style.fontSize=(parseFloat(getComputedStyle(h).fontSize)*W/m*.98)+'px'};fit();addEventListener('resize',fit);new MutationObserver(fit).observe(h,{childList:true});document.fonts&&document.fonts.ready.then(fit)}
+
+{const SKIP=/^(SCRIPT|STYLE|SVG|TITLE|CANVAS|TEXTAREA|INPUT)$/i;
+ const conv=root=>{const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{const p=n.parentElement;if(!p||SKIP.test(p.tagName)||p.closest('.mail,.nodot,footer a,svg'))return NodeFilter.FILTER_REJECT;return /[^.\d]\.(?=\s|$)/.test(n.nodeValue)?NodeFilter.FILTER_ACCEPT:NodeFilter.FILTER_SKIP}});
+  const ns=[];while(w.nextNode())ns.push(w.currentNode);
+  for(const n of ns){const parts=n.nodeValue.split(/(?<=[^.\d])\.(?=\s|$)/);if(parts.length<2)continue;const f=document.createDocumentFragment();parts.forEach((t,i)=>{if(t)f.appendChild(document.createTextNode(t));if(i<parts.length-1){const d=document.createElement('span');d.className='pd';d.setAttribute('aria-hidden','true');f.appendChild(d);f.appendChild(Object.assign(document.createElement('span'),{className:'sr',textContent:'.'}))}});n.replaceWith(f)}};
+ conv(document.body);let pend=0;new MutationObserver(()=>{if(pend)return;pend=1;requestAnimationFrame(()=>{pend=0;conv(document.body)})}).observe(document.body,{childList:true,subtree:true,characterData:true})}
 </script>
 </body>
 </html>
