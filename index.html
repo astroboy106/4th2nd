@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>4th CREATIVE PARTY</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-1 -4 11 11'%3E%3Crect x='-1' y='-4' width='11' height='11' rx='0' fill='%2307130d'/%3E%3Cpath fill='%23e2e0e2' d='M0 0h1v1h1v-1h1v1h1v-1h1v1h1v-1h1v1h2v2h-1v-1h-1v1h-1v-1h-1v1h-1v-1h-1v1h-1v-1h-2z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* VOICE   정면, 정확, 느린 회전. 장식은 없고 모든 것이 블록 단위로 쌓인다.
+   IDEA    큐브 한 개가 페이지의 단위: 심볼, 숫자, IP 엠블럼, 필름 월, 연표가 모두 블록으로 지어진다
+   PICTURE WebGL 큐브 필드(히어로·수치·IP·문의) + CSS 회전 프리즘 벽(필모그래피)
+   COLOUR  사진 팔레트: 욕조 그린 #07130d·#1d4434 / 타일 화이트 #e2e0e2 / 타월 다크 옐로 #c08a26 / 포스 로고 마젠타 #c40c66(드물게)
+   TYPE    Inter Tight + Noto Sans KR. LAYOUT 정사각 모듈, 모서리 4px, 버튼은 두께가 있는 키 */
+html,body{background:#07130d}
+:root{color-scheme:dark;--bg:#07130d;--fg:#e6e4e6;--mu:rgba(230,228,230,.55);--ln:rgba(230,228,230,.1);--cl:#e2e0e2;--cd:#163a2c;--ac:#c08a26;
+--e:cubic-bezier(.22,1,.36,1);--io:cubic-bezier(.65,0,.35,1);--w:84rem;--g:clamp(18px,4.4vw,64px)}
+*{box-sizing:border-box;min-width:0;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px;overflow-x:clip}
+body{color:var(--fg);font:16px/1.6 "Inter Tight","Noto Sans KR","Noto Sans CJK KR",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:clip;word-break:keep-all}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+.wrap{max-width:var(--w);margin:0 auto;padding:0 var(--g)}
+.lbl{display:flex;align-items:center;gap:10px;font-size:15.6px;color:var(--mu)}
+.sq{width:9px;height:9px;background:var(--ac);flex:none;box-shadow:2px 2px 0 #5e4517}
+.sq.p{background:#c40c66;box-shadow:2px 2px 0 #6b0636}
+.sq.w{background:var(--cl);box-shadow:2px 2px 0 #8a8a90}
+h2{font-weight:400;font-size:clamp(30px,4.4vw,58px);line-height:1.08;letter-spacing:-.035em;text-wrap:balance}
+h2 .m{color:rgba(230,228,230,.4)}
+.lead{color:var(--mu);font-weight:300;max-width:32rem}
+.head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,26rem);gap:24px var(--g);align-items:end;margin-bottom:clamp(40px,5vw,72px)}
+.head .lbl{grid-column:1/-1}
+.sec{padding:clamp(96px,11vw,168px) 0;position:relative}
+
+/* keys */
+.key{height:46px;padding:0 20px;border-radius:0;display:inline-flex;align-items:center;gap:12px;font-size:14px;font-weight:500;white-space:nowrap;
+background:var(--cl);color:#0c1d15;box-shadow:0 4px 0 #9a9aa0;transition:transform .12s,box-shadow .12s,background .2s}
+.key:active{transform:translateY(4px);box-shadow:0 0 0 #9a9aa0}
+.key.d{background:#12291e;color:var(--fg);box-shadow:0 4px 0 #030a06,inset 0 0 0 1px #24493a}
+.key.d:active{box-shadow:0 0 0 #030a06,inset 0 0 0 1px #24493a}
+.key.o{background:var(--ac);color:#0c1d15;box-shadow:0 4px 0 #5e4517}
+.key.o:active{box-shadow:0 0 0 #5e4517}
+.key svg{width:12px;height:12px;stroke:currentColor;stroke-width:2;fill:none}
+
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;padding:14px var(--g);display:flex;align-items:center;justify-content:space-between;gap:20px;transition:background .3s}
+.nav.solid{background:rgba(7,19,13,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.mark{display:flex;align-items:center;gap:12px;font-size:14px;font-weight:500;white-space:nowrap}
+.mark svg{width:30px;height:10px;fill:currentColor}
+.links{display:flex;gap:4px;position:absolute;left:50%;transform:translateX(-50%)}
+.links a{font-size:14px;color:rgba(230,228,230,.7);padding:8px 12px;border-radius:0;transition:background .2s,color .2s}
+.links a:hover{background:#122a1f;color:var(--fg)}
+.nav .key{height:40px}
+.lang{display:flex;gap:2px;padding:3px;background:#0c1d15;box-shadow:inset 0 0 0 1px #183528;margin-left:auto}
+.lang button{height:34px;min-width:42px;font-size:12px;letter-spacing:.06em;color:var(--mu);transition:background .2s,color .2s}
+.lang button.cur{background:var(--cl);color:#07130d}
+.burger{display:none;width:44px;height:44px;border-radius:0;background:#122a1f;place-items:center}
+.burger i,.burger i::before{display:block;width:16px;height:1.5px;background:currentColor;position:relative;transition:transform .3s}
+.burger i::before{content:"";position:absolute;top:5px}.burger i{transform:translateY(-2.5px)}
+.open .burger i{transform:rotate(45deg)}.open .burger i::before{transform:translateY(-5px) rotate(-90deg)}
+.sheet{position:fixed;inset:0;z-index:45;background:#07130d;padding:100px var(--g) 40px;display:grid;align-content:start;gap:8px;opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.open .sheet{opacity:1;visibility:visible}
+.sheet a{font-size:30px;font-weight:300;letter-spacing:-.03em;padding:12px 16px;background:#0f241a;border-radius:0}
+
+/* hero */
+.hero{position:relative;height:100vh;height:100dvh;min-height:640px;overflow:hidden;background:radial-gradient(55% 60% at 62% 36%,rgba(230,228,230,.05),transparent 70%)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hname{position:absolute;z-index:1;pointer-events:none;line-height:1}
+.hname{text-align:center}.hname span{display:inline-block;white-space:nowrap;font-weight:600;letter-spacing:-.01em;color:#333333;perspective:600px}
+.hname i{display:inline-block;font-style:normal;opacity:0;backface-visibility:hidden;transition:transform .9s cubic-bezier(.45,0,.2,1),opacity .35s ease}
+.hname.on i{opacity:1;transform:none!important}
+.hcopy{position:absolute;left:0;right:0;bottom:0;z-index:2;padding-bottom:max(52px,env(safe-area-inset-bottom))}
+.hcopy .wrap{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:32px;align-items:end}
+h1{font-weight:400;font-size:clamp(38px,5.3vw,80px);line-height:1.04;letter-spacing:-.045em;margin:20px 0 24px}
+h1 span{display:block}
+h1 .m{color:rgba(230,228,230,.42)}
+@media (min-width:1000px){h1 span{white-space:nowrap}}
+.sub{max-width:34rem;color:rgba(230,228,230,.68);font-weight:300}
+.sub .ln{display:block;white-space:nowrap}
+.ctas{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+.meta{display:grid;gap:8px;justify-items:end;text-align:right;font-size:14.4px;color:var(--mu);font-variant-numeric:tabular-nums;padding-bottom:4px}
+.meta b{font-weight:400;color:rgba(230,228,230,.88)}
+.js .in{opacity:0;transform:translateY(22px)}
+.ready .in{opacity:1;transform:none;transition:opacity .9s var(--e),transform 1s var(--e);transition-delay:var(--d,0s)}
+
+/* film wall */
+.wall{--h:84px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;perspective:1800px}
+.cell{height:var(--h);position:relative}
+.pr{position:absolute;inset:0;transform-style:preserve-3d}
+.fc{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:0;padding:10px 12px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;}
+.fc.d{background:var(--cd);color:var(--fg);box-shadow:inset 0 0 0 1px #21483a}
+.fc.l{background:var(--cl);color:#0c1d15}
+.fc.o{background:var(--ac);color:#0c1d15}
+.fc.nx{visibility:hidden}
+.fc.b{background:#cfe1f9;color:#07130d}
+.fc small{font-size:11px;opacity:.55;font-variant-numeric:tabular-nums}
+.fc b{font-weight:400;font-size:clamp(13px,1.15vw,16px);line-height:1.25;letter-spacing:-.01em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.wnote{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:20px;font-size:15.6px;color:var(--mu)}
+.wnote span{display:flex;align-items:center;gap:8px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.stat{background:#0c1d15;border-radius:0;box-shadow:inset 0 0 0 1px #183528;padding:18px 18px 22px}
+.stat .cv{height:clamp(110px,11vw,160px);position:relative}
+.stat canvas,.ipc canvas,.cta canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stat p{font-size:14px;color:var(--mu);margin-top:14px}
+.stat p b{display:block;font-weight:400;color:var(--fg);font-size:15px}
+
+/* services */
+.svc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px}
+.sv{background:#0c1d15;border-radius:0;box-shadow:inset 0 0 0 1px #183528;padding:26px;min-height:260px;display:flex;flex-direction:column;gap:12px}
+.blk{display:grid;grid-template-columns:repeat(3,14px);gap:4px;margin-bottom:auto;perspective:240px}
+.blk i{width:14px;height:14px;background:#1d4434;transform:rotateY(180deg) scale(.3);opacity:0;transition:transform 1.1s cubic-bezier(.65,0,.35,1),opacity .4s}
+.sv.lit .blk i{transform:none;opacity:1;transition-delay:calc(var(--j)*110ms + .15s)}
+.blk i.on{background:var(--cl)}.blk i.o{background:var(--ac)}
+.sv h3{font-weight:400;font-size:24px;letter-spacing:-.03em;margin-top:28px}
+.sv p{color:var(--mu);font-size:15px;font-weight:300}
+.asset{margin-top:6px;background:#0c1d15;box-shadow:inset 0 0 0 1px #183528;color:var(--fg);border-radius:0;padding:clamp(24px,3vw,36px);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px;align-items:center}
+.asset h3{font-weight:400;font-size:clamp(24px,2.6vw,34px);letter-spacing:-.03em;line-height:1.2}
+.asset p{color:var(--mu);font-weight:300;margin-top:12px}
+.mcv{aspect-ratio:24/10;position:relative}.mcv canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.mlab{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}.mlab span{font-size:13px;padding:6px 12px;background:#12291e;color:var(--mu);transition:background .4s,color .4s}.mlab span.cur{background:var(--ac);color:#07130d}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.tags span{font-size:13px;padding:7px 12px;background:#12291e;border-radius:0;box-shadow:0 3px 0 #030a06}
+
+/* IP */
+.railhead{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:40px;flex-wrap:wrap}
+
+.railwrap{max-width:var(--w);margin:0 auto;padding:0 var(--g)}
+.rail{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.rail::-webkit-scrollbar{display:none}
+.rail .card{flex:0 0 calc((100% - 18px)/3.3);scroll-snap-align:start;scroll-snap-stop:always}
+.js .rail .rv{transform:none}
+.arrows{display:flex;gap:8px;align-items:center}.arrows .key{width:48px;padding:0;justify-content:center}.arrows .key:disabled{opacity:.35}
+.dots{display:flex;gap:6px;margin-top:18px}.dots button{width:28px;height:28px;display:grid;place-items:center}.dots button i{width:10px;height:10px;background:#1d4434;transition:background .3s,transform .3s}.dots button.cur i{background:var(--ac);transform:scale(1.2)}
+.pos{font-size:13px;color:var(--mu);font-variant-numeric:tabular-nums;margin-right:8px}
+.card{background:#0c1d15;border-radius:0;box-shadow:inset 0 0 0 1px #183528;overflow:hidden;display:flex;flex-direction:column}
+.ipc{height:clamp(220px,22vw,300px);position:relative;background:#0a1912}
+.st{position:absolute;left:14px;top:14px;z-index:1;font-size:12px;padding:6px 10px;border-radius:0;background:#122a1f;display:flex;align-items:center;gap:8px}
+.st .sq{width:7px;height:7px;box-shadow:none}
+.st.off .sq{background:#777}
+.cb{padding:22px 22px 26px;display:grid;gap:8px}
+.cb .cr{font-size:13px;color:var(--mu)}
+.cb h3{font-weight:400;font-size:28px;letter-spacing:-.04em;line-height:1.1}
+.cb p{font-size:14px;color:rgba(230,228,230,.68);font-weight:300}
+
+/* awards */
+.aw{list-style:none;display:grid;gap:4px}
+.aw li{display:grid;grid-template-columns:72px minmax(0,1fr) minmax(0,220px);gap:20px;align-items:center;padding:16px 18px;background:#0c1d15;border-radius:0;transition:background .25s}
+.aw li:hover{background:#163a2c}
+.aw .y{font-variant-numeric:tabular-nums;color:var(--mu);font-size:14px;display:flex;align-items:center;gap:10px}
+.aw .a{font-size:16px}
+.aw .f{text-align:right;color:var(--mu);font-size:14px}
+.aw li.top{background:var(--cl);color:#0c1d15}.aw li.top .y,.aw li.top .f{color:#4a5a50}
+
+/* founder */
+.fd{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--g);align-items:start}
+.nm{font-size:clamp(64px,10vw,148px);font-weight:300;letter-spacing:-.06em;line-height:.9}
+.nm small{display:block;font-size:14px;letter-spacing:0;color:var(--mu);margin-top:20px;line-height:1.5}
+.stair{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;align-items:end;margin-top:40px}
+.step{display:grid;gap:10px}
+.step .b{height:calc(var(--n)*46px);position:relative;display:flex;flex-direction:column-reverse;gap:2px;perspective:500px;font-variant-numeric:tabular-nums;font-size:20px;letter-spacing:-.03em}
+.b .u{height:44px;flex:none;background:#163a2c;box-shadow:inset 0 0 0 1px #21483a;transform-origin:50% 100%;transform:rotateX(-100deg);opacity:0}
+.step:nth-child(3) .u{background:var(--cl);box-shadow:none}.step:last-child .u{background:var(--ac);box-shadow:none}
+.b em{position:absolute;left:12px;top:10px;font-style:normal;z-index:1;opacity:0}
+.step:nth-child(n+3) .b em{color:#07130d}
+.step span{font-size:13px;color:var(--mu);line-height:1.45}
+.stair.on .u{transform:none;opacity:1;transition:transform .9s cubic-bezier(.65,0,.35,1),opacity .25s;transition-delay:calc(var(--q)*140ms)}
+.stair.on .b em{opacity:1;transition:opacity .6s;transition-delay:calc(var(--q)*140ms + .7s)}
+.team{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:40px}
+.team button{text-align:left;background:#0c1d15;border-radius:0;box-shadow:inset 0 0 0 1px #183528;padding:16px 18px;display:grid;gap:2px;transition:background .25s,box-shadow .25s}
+.team button:hover{background:#12291e;box-shadow:inset 0 0 0 1px var(--ac)}
+.team em{font-style:normal;font-size:12px;color:var(--ac);margin-top:8px;display:flex;align-items:center;gap:6px}
+.team em::after{content:"";width:6px;height:6px;border-top:1.5px solid currentColor;border-right:1.5px solid currentColor;transform:rotate(45deg)}
+.pf{position:fixed;inset:0;z-index:70;display:grid;place-items:center;padding:20px;background:rgba(3,10,6,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .3s,visibility .3s}
+.pf.open{opacity:1;visibility:visible}
+.pfc{width:min(760px,100%);max-height:calc(100dvh - 40px);overflow:auto;background:#0c1d15;box-shadow:inset 0 0 0 1px #21483a;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);transform:translateY(16px);transition:transform .4s var(--e)}
+.pf.open .pfc{transform:none}
+.pfi{background:#f4f3ef;min-height:280px;position:relative}
+.pfi img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.pfi.line{background:#fff}.pfi.line img{object-fit:contain;padding:18px}
+.pfb{padding:clamp(22px,3vw,34px);display:grid;gap:6px;align-content:start;position:relative}
+.pfb .role{font-size:13px;color:var(--ac)}
+.pfb h3{font-weight:400;font-size:clamp(30px,3.6vw,40px);letter-spacing:-.03em;line-height:1.1}
+.pfb .aff{color:var(--mu);font-size:14px;margin-top:4px}
+.pfb ul{list-style:none;margin-top:18px;display:grid;gap:8px;border-top:1px solid var(--ln);padding-top:18px}
+.pfb li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;font-size:14px;line-height:1.5}
+.pfb li b{font-weight:400;color:var(--mu);font-variant-numeric:tabular-nums}
+.pfx{position:absolute;top:10px;right:10px;width:44px;height:44px;display:grid;place-items:center;background:#12291e}
+.pfx::before,.pfx::after{content:"";position:absolute;width:16px;height:1.5px;background:var(--fg);transform:rotate(45deg)}.pfx::after{transform:rotate(-45deg)}
+@media (max-width:640px){.pfc{grid-template-columns:1fr}.pfi{min-height:0;aspect-ratio:4/3}.pfi.line{aspect-ratio:16/10}}
+.team b{font-weight:400;font-size:17px;display:block}
+.team span{font-size:13px;color:var(--mu)}
+
+/* contact */
+.cta{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--g);align-items:center}
+.cta .cv{aspect-ratio:1;position:relative;max-width:420px;width:100%}
+.cta .cv img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .5s}
+.cta .cv.rev img{opacity:1}
+.cta .cv canvas{z-index:1}
+.cta h2{font-size:clamp(38px,6vw,88px);letter-spacing:-.05em;line-height:1}
+.mail{margin-top:32px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.mail span{font-size:clamp(16px,1.8vw,20px);padding:10px 16px;background:#0f241a;border-radius:0;box-shadow:inset 0 0 0 1px #1f3d30;word-break:break-all}
+.copied{min-height:22px;margin-top:12px;font-size:13px;color:var(--mu)}
+footer{border-top:1px solid var(--ln);padding:28px 0 max(28px,env(safe-area-inset-bottom))}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--mu)}
+footer .mark{color:var(--fg)}
+
+.js .rv{opacity:0;transform:translateY(24px)}
+.rv.on{opacity:1;transform:none;transition:opacity .8s var(--e),transform .8s var(--e);transition-delay:var(--d,0s)}
+
+@media (max-width:1000px){
+.rail .card{flex-basis:calc((100% - 12px)/2.3)}
+.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.svc{grid-template-columns:1fr}.sv{min-height:0}.sv h3{margin-top:16px}
+.asset,.fd,.cta,.head{grid-template-columns:1fr}
+.wall{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media (max-width:760px){
+.rail .card{flex-basis:84%}.ipc{height:240px}.railhead{align-items:start}
+.links,.nav>.key{display:none}.burger{display:grid}
+.hcopy .wrap{grid-template-columns:1fr}
+.meta{justify-items:start;text-align:left}.meta div:first-child{display:none}
+h1{font-size:clamp(30px,8.6vw,40px);margin:14px 0 16px}.sub{font-size:clamp(12px,3.6vw,15px)}.ctas{margin-top:22px}
+.ctas .key{flex:1 1 auto;justify-content:center}
+.hcopy{padding-bottom:max(28px,env(safe-area-inset-bottom))}
+.wall{--h:66px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.wall .cell:nth-child(n+25){display:none}
+.aw li{grid-template-columns:52px minmax(0,1fr);gap:4px 14px}.aw .f{grid-column:2;text-align:left}
+.team{grid-template-columns:1fr}
+.stair{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cta .cv{max-width:260px}
+}
+@media (prefers-reduced-motion:reduce){
+.blk i{transform:none!important;opacity:1!important}
+*,*::before,*::after{transition:none!important;animation:none!important}
+.js .in,.js .rv{opacity:1!important;transform:none!important}.stair .u{transform:none!important;opacity:1!important}.stair .b em{opacity:1!important}
+html{scroll-behavior:auto}
+}
+
+.lbl .sq,.lbl .sq.w{background:#c40c66;box-shadow:2px 2px 0 #6e0738}
+</style>
+</head>
+<body>
+<header class="nav" id="nav">
+  <a class="mark" href="#top" aria-label="4th CREATIVE PARTY 홈"><svg viewBox="0 0 9 3" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 0h1v1h1v-1h1v1h1v-1h1v1h1v-1h1v1h2v2h-1v-1h-1v1h-1v-1h-1v1h-1v-1h-1v1h-1v-1h-2z"/></svg>4th CREATIVE PARTY</a>
+  <nav class="links" aria-label="주요 메뉴"><a href="#work" data-en="Filmography">필모그래피</a><a href="#studio" data-en="Studio">스튜디오</a><a href="#ip" data-en="Original IP">오리지널 IP</a><a href="#founder" data-en="Founder">대표</a></nav>
+  <div class="lang" role="group" aria-label="Language"><button data-l="ko">KO</button><button data-l="en">EN</button></div>
+  <a class="key" href="#contact" data-en="Contact us&lt;svg viewBox=&quot;0 0 12 12&quot;&gt;&lt;path d=&quot;M2 10 10 2M4 2h6v6&quot;/&gt;&lt;/svg&gt;">프로젝트 문의<svg viewBox="0 0 12 12"><path d="M2 10 10 2M4 2h6v6"/></svg></a>
+  <button class="burger" id="burger" aria-label="메뉴 열기" aria-expanded="false"><i></i></button>
+</header>
+<div class="sheet" id="sheet" aria-hidden="true"><a href="#work" data-en="Filmography">필모그래피</a><a href="#studio" data-en="Studio">스튜디오</a><a href="#ip" data-en="Original IP">오리지널 IP</a><a href="#founder" data-en="Founder">대표</a><a href="#contact" data-en="Contact us">프로젝트 문의</a></div>
+
+<main id="top">
+<section class="hero" aria-label="소개">
+  <canvas id="heroCv" aria-hidden="true"></canvas>
+  <div class="hcopy"><div class="wrap">
+    <div>
+      <div class="lbl in" style="--d:.2s" data-en="&lt;span class=&quot;sq&quot;&gt;&lt;/span&gt;AIGC Studio · Seoul · Since 1996"><span class="sq"></span>AIGC 스튜디오 · 서울 · Since 1996</div>
+      <h1 class="in" style="--d:.3s" data-en="&lt;span&gt;After 190 films,&lt;/span&gt;&lt;span&gt;&lt;span class=&quot;m&quot; style=&quot;display:inline&quot;&gt;we now&lt;/span&gt; tell our own &lt;span class=&quot;m&quot; style=&quot;display:inline&quot;&gt;stories.&lt;/span&gt;&lt;/span&gt;"><span>190편의 영화를 만들었고,</span><span><span class="m" style="display:inline">이제</span> 우리 이야기를 <span class="m" style="display:inline">만듭니다.</span></span></h1>
+      <p class="sub in" style="--d:.45s" data-en="&lt;span class=&quot;ln&quot;&gt;4th CREATIVE PARTY&lt;/span&gt;&lt;span class=&quot;ln&quot;&gt;has spent 31 years on VFX for acclaimed films&lt;/span&gt;&lt;span class=&quot;ln&quot;&gt;such as &#x27;Oldboy&#x27;, &#x27;The Host&#x27;,&lt;/span&gt;&lt;span class=&quot;ln&quot;&gt;&#x27;The Handmaiden&#x27; and &#x27;Okja&#x27;.&lt;/span&gt;&lt;span class=&quot;ln&quot;&gt;Using AI efficiently with VFX craft refined over years,&lt;/span&gt;&lt;span class=&quot;ln&quot;&gt;we produce animation and games.&lt;/span&gt;&lt;span class=&quot;ln&quot;&gt;A content studio built on technology and IP.&lt;/span&gt;"><span class="ln">포스크리에이티브파티는</span><span class="ln">31년간 '올드보이', '괴물', '아가씨', '옥자' 등의</span><span class="ln">세계적인 작품에서 시각효과를 만들어 온 스튜디오입니다.</span><span class="ln">다년 간 학습된 VFX 기술과 AI를 효율적으로 사용하여</span><span class="ln">애니메이션과 게임을 제작합니다.</span><span class="ln">기술과 IP 중심의 컨텐츠 제작 스튜디오입니다.</span></p>
+      <div class="ctas in" style="--d:.6s"><a class="key o" href="#contact" data-en="Contact us&lt;svg viewBox=&quot;0 0 12 12&quot;&gt;&lt;path d=&quot;M2 10 10 2M4 2h6v6&quot;/&gt;&lt;/svg&gt;">프로젝트 문의<svg viewBox="0 0 12 12"><path d="M2 10 10 2M4 2h6v6"/></svg></a><a class="key d" href="#ip" data-en="See IP lineup">IP 라인업 보기</a></div>
+    </div>
+    <div class="meta in" style="--d:.8s"><div>37.57°N 126.98°E · <b id="clock">--:--</b> KST</div><div data-en="90th Academy Awards VFX &lt;b&gt;Bake-off 10&lt;/b&gt; · &#x27;Okja&#x27;">제90회 아카데미 시각효과 <b>Bake-off 10</b> · '옥자'</div></div>
+  </div></div>
+</section>
+
+<section class="sec" id="work">
+  <div class="wrap">
+    <div class="head">
+      <div class="lbl rv" data-en="&lt;span class=&quot;sq w&quot;&gt;&lt;/span&gt;Filmography"><span class="sq w"></span>필모그래피</div>
+      <h2 class="rv" data-en="One film per block. &lt;span class=&quot;m&quot;&gt;Turning through 190+.&lt;/span&gt;">한 블록에 한 편. <span class="m">190편 이상을 돌려 봅니다.</span></h2>
+      <p class="lead rv" data-en="Blocks turn slowly to reveal the films we worked on. Yellow faces mark VFX award winners.">블록이 천천히 돌며 참여 작품을 보여 줍니다. 노란 면은 시각효과 수상작입니다.</p>
+    </div>
+    <div class="wall" id="wall" aria-label="주요 참여작"></div>
+    <div class="wnote" data-en="&lt;span&gt;&lt;span class=&quot;sq&quot;&gt;&lt;/span&gt;VFX award winner&lt;/span&gt;"><span><span class="sq"></span>시각효과 수상작</span></div>
+  </div>
+</section>
+
+<section class="sec" id="studio" style="padding-top:0">
+  <div class="wrap">
+    <div class="head">
+      <div class="lbl rv" data-en="&lt;span class=&quot;sq w&quot;&gt;&lt;/span&gt;Studio"><span class="sq w"></span>스튜디오</div>
+      <h2 class="rv" data-en="Building our own IP &lt;span class=&quot;m&quot;&gt;with blocks laid on set.&lt;/span&gt;">현장에서 쌓은 블록으로 <span class="m">우리 IP를 짓습니다.</span></h2>
+      <p class="lead rv" style="font-size:1.1em" data-en="A studio proven through commissioned VFX now runs technology and creation together. AI is the assistant; the judgement comes from 31 years in the field.">VFX 수주로 기술력을 인정받은 스튜디오가 이제 기술과 창작을 함께 운영합니다. AI는 조수이고, 판단은 31년 현업의 몫입니다.</p>
+    </div>
+    <div class="stats">
+      <div class="stat rv"><div class="cv"><canvas data-num="190+" aria-hidden="true"></canvas></div><p data-en="&lt;b&gt;190+ films&lt;/b&gt;Feature films with our visual effects"><b>190편 이상</b>시각효과로 참여한 장편 영화</p></div>
+      <div class="stat rv" style="--d:.08s"><div class="cv"><canvas data-num="31" aria-hidden="true"></canvas></div><p data-en="&lt;b&gt;31 years&lt;/b&gt;In the industry since EON Digital Films (1996)"><b>31년</b>EON Digital Films(1996)부터 이어 온 현업</p></div>
+      <div class="stat rv" style="--d:.16s"><div class="cv"><canvas data-num="14" aria-hidden="true"></canvas></div><p data-en="&lt;b&gt;14 awards&lt;/b&gt;VFX awards in Korea and abroad"><b>14회</b>국내외 시각효과 수상</p></div>
+      <div class="stat rv" style="--d:.24s"><div class="cv"><canvas data-num="2019" aria-hidden="true"></canvas></div><p data-en="&lt;b&gt;2019&lt;/b&gt;First Korean member of the Academy Visual Effects Branch"><b>2019년</b>한국인 최초 아카데미 시각효과 부문 정회원</p></div>
+    </div>
+    <div class="svc">
+      <article class="sv rv"><div class="blk" aria-hidden="true"><i class="on"></i><i></i><i></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i class="on"></i><i class="o"></i></div><h3 data-en="Original IP">오리지널 IP</h3><p data-en="We plan and produce animation and game IP in-house, from script and concept to the finished film.">애니메이션과 게임 IP를 직접 기획하고 제작합니다. 시나리오, 컨셉, 본편까지 스튜디오 안에서 진행합니다.</p></article>
+      <article class="sv rv" style="--d:.08s"><div class="blk" aria-hidden="true"><i></i><i class="on"></i><i></i><i class="on"></i><i class="o"></i><i class="on"></i><i></i><i class="on"></i><i></i></div><h3 data-en="Multimedia Production">멀티미디어 제작</h3><p data-en="We take on commercials, music videos and other external projects from planning to delivery.">광고, 뮤직비디오 등 외부 프로젝트를 수주해 기획부터 완성까지 제작합니다.</p></article>
+      <article class="sv rv" style="--d:.16s"><div class="blk" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i class="on"></i><i class="o"></i><i></i><i class="on"></i></div><h3 data-en="AI + VFX Solutions">AI + VFX 솔루션</h3><p data-en="We provide production solutions that combine AI with established VFX for external films and content.">외부 영화와 콘텐츠에 AI와 기존 VFX 기술을 결합한 제작 솔루션을 제공합니다.</p></article>
+    </div>
+    <div class="asset rv">
+      <div>
+        <h3 data-en="Adding AI to&lt;br&gt;31 years of VFX legacy.">31년간 쌓아온 VFX 레거시에<br>AI를 더합니다.</h3>
+        <p data-en="From animals to architecture, we hold data used on real productions. Combined with AI, it shortens the early stages of every new project.">동물부터 건축물까지, 현장에서 실제로 쓰인 데이터를 보유하고 있습니다. 이 데이터와 AI를 결합해 새 작품의 초기 제작 기간을 줄입니다.</p>
+        <div class="tags" data-en="&lt;span&gt;Modeling&lt;/span&gt;&lt;span&gt;Lighting&lt;/span&gt;&lt;span&gt;Animation&lt;/span&gt;&lt;span&gt;Rigging&lt;/span&gt;&lt;span&gt;FX&lt;/span&gt;&lt;span&gt;Footage&lt;/span&gt;"><span>모델링</span><span>라이팅</span><span>애니메이션</span><span>리깅</span><span>FX</span><span>영상 데이터</span></div>
+      </div>
+      <div>
+        <div class="mcv"><canvas id="morphCv" aria-hidden="true"></canvas></div>
+        <div class="mlab" id="mlab"><span class="cur" data-en="VFX data">VFX 데이터</span><span>AI</span><span>VFX + AI</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="ip" style="padding-top:0">
+  <div class="wrap railhead">
+    <div><div class="lbl rv" style="margin-bottom:18px" data-en="&lt;span class=&quot;sq w&quot;&gt;&lt;/span&gt;Original IP"><span class="sq w"></span>오리지널 IP</div><h2 class="rv" data-en="Five animated films, &lt;span class=&quot;m&quot;&gt;built one at a time.&lt;/span&gt;">다섯 편의 애니메이션을 <span class="m">순서대로 짓고 있습니다.</span></h2></div>
+    <div class="arrows"><span class="pos" id="pos">1 / 5</span><button class="key d" id="prev" aria-label="이전 작품"><svg viewBox="0 0 12 12"><path d="M8 2 4 6l4 4"/></svg></button><button class="key d" id="next" aria-label="다음 작품"><svg viewBox="0 0 12 12"><path d="m4 2 4 4-4 4"/></svg></button></div>
+  </div>
+  <div class="railwrap"><div class="rail" id="rail" tabindex="0" aria-label="IP 목록"></div><div class="dots" id="dots"></div></div>
+</section>
+
+<section class="sec" style="padding-top:0">
+  <div class="wrap">
+    <div class="head"><div class="lbl rv" data-en="&lt;span class=&quot;sq w&quot;&gt;&lt;/span&gt;Awards"><span class="sq w"></span>수상</div><h2 class="rv" data-en="&lt;span class=&quot;m&quot;&gt;Recognition&lt;/span&gt; earned by the work."><span class="m">작품으로 받은</span> 평가.</h2></div>
+    <ul class="aw" id="awards"></ul>
+  </div>
+</section>
+
+<section class="sec" id="founder" style="padding-top:0">
+  <div class="wrap fd">
+    <div class="nm rv" data-en="Lee Jeon-Hyoung&lt;small&gt;Creative Director · VFX Supervisor&lt;br&gt;이전형&lt;/small&gt;">이전형<small>크리에이티브 디렉터 · VFX 슈퍼바이저<br>Lee Jeon-Hyoung</small></div>
+    <div>
+      <p class="lead rv" style="max-width:40rem" data-en="A first-generation Korean VFX supervisor.&lt;br&gt;Industrial design graduate.&lt;br&gt;Starting with Park Chan-wook&#x27;s &#x27;Oldboy&#x27;&lt;br&gt;and Bong Joon-ho&#x27;s &#x27;Barking Dogs Never Bite&#x27;,&lt;br&gt;he has worked on every film by both masters.&lt;br&gt;He has also worked with Kim Sung-su&lt;br&gt;and other top-tier Korean directors.">한국 1세대 VFX 슈퍼바이저.<br>산업디자인 전공.<br>박찬욱 감독의 '올드보이',<br>봉준호 감독의 '플란다스의 개'를 시작으로<br>두 거장의 모든 작품 참여.<br>그 외 김성수 감독을 비롯한 국내 탑티어<br>감독들과의 협업 경험.</p>
+      <div class="stair" id="stair">
+        <div class="step" style="--n:1"><div class="b">1996</div><span data-en="Founded EON Digital Films">EON Digital Films 설립</span></div>
+        <div class="step" style="--n:2"><div class="b">2008</div><span data-en="Founded 4th CREATIVE PARTY">4th CREATIVE PARTY 설립</span></div>
+        <div class="step" style="--n:3"><div class="b">2018</div><span data-en="&#x27;Okja&#x27;, Academy Awards VFX Bake-off 10">'옥자', 아카데미 시각효과 Bake-off 10</span></div>
+        <div class="step" style="--n:4"><div class="b">2019</div><span data-en="First Korean member of the Academy Visual Effects Branch">한국인 최초 아카데미 시각효과 부문 정회원</span></div>
+      </div>
+      <div class="team">
+        <button class="rv" data-p="lee" data-en="&lt;b&gt;Lee Jeon-Hyoung&lt;/b&gt;&lt;span&gt;Creative Director · Creator of &#x27;GAUNTLET&#x27; and &#x27;Eco Robot&#x27;&lt;/span&gt;&lt;em&gt;View profile&lt;/em&gt;"><b>이전형</b><span>크리에이티브 디렉터 · '건틀렛', '에코로봇' 원작</span><em>프로필 보기</em></button>
+        <button class="rv" style="--d:.08s" data-p="han" data-en="&lt;b&gt;Han Se-jin&lt;/b&gt;&lt;span&gt;Director · &#x27;Coney Circus&#x27;&lt;/span&gt;&lt;em&gt;View profile&lt;/em&gt;"><b>한세진</b><span>감독 · '코니서커스'</span><em>프로필 보기</em></button>
+        <button class="rv" style="--d:.16s" data-p="hjl" data-en="&lt;b&gt;Lee Hyun-jung&lt;/b&gt;&lt;span&gt;Creator of &#x27;Fantastic Ani&#x27;&lt;/span&gt;&lt;em&gt;View profile&lt;/em&gt;"><b>이현중</b><span>'환상의 애니' 원작</span><em>프로필 보기</em></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="contact" style="padding-top:0">
+  <div class="wrap cta">
+    <div class="cv"><img src="logo.jpg" alt="4th CREATIVE PARTY 로고"><canvas id="ctaCv" aria-hidden="true"></canvas></div>
+    <div>
+      <div class="lbl rv" style="margin-bottom:24px" data-en="&lt;span class=&quot;sq p&quot;&gt;&lt;/span&gt;Open for new projects"><span class="sq p"></span>새 프로젝트 상담 가능</div>
+      <h2 class="rv" data-en="Let&#x27;s talk about&lt;br&gt;&lt;span class=&quot;m&quot;&gt;your next film.&lt;/span&gt;">다음 작품을<br><span class="m">같이 이야기해요.</span></h2>
+      <div class="mail rv"><span>yizeon@4thparty.co.kr</span><button class="key o" id="copy" data-en="Copy address">주소 복사</button></div>
+      <div class="copied" id="copied" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+</main>
+<div class="pf" id="pf" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="pfName">
+  <div class="pfc"><div class="pfi" id="pfImg"><img alt=""></div>
+  <div class="pfb"><button class="pfx" id="pfX" aria-label="닫기"></button><span class="role" id="pfRole"></span><h3 id="pfName"></h3><div class="aff" id="pfAff"></div><ul id="pfList"></ul></div></div>
+</div>
+
+<footer><div class="wrap">
+  <a class="mark" href="#top"><svg viewBox="0 0 9 3" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 0h1v1h1v-1h1v1h1v-1h1v1h1v-1h1v1h2v2h-1v-1h-1v1h-1v-1h-1v1h-1v-1h-1v1h-1v-1h-2z"/></svg>4th CREATIVE PARTY</a>
+  <span data-en="Seoul, Korea">포스크리에이티브파티 · 서울</span>
+  <a href="https://www.4thcreative.co.kr">www.4thcreative.co.kr</a>
+  <span>© 2026 4th CREATIVE PARTY</span>
+</div></footer>
+
+<script>
+{
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const root=document.documentElement;root.classList.add('js');
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* ---------- data ---------- */
+const films=[[2023,'서울의 봄'],[2022,'헤어질 결심'],[2022,'음양사'],[2020,'남산의 부장들'],[2020,'반도'],[2019,'완벽한 타인'],[2019,'백두산'],[2019,'천문: 하늘에 묻는다'],
+[2018,'7년의 밤'],[2018,'고검기담'],[2018,'삼체'],[2017,'옥자'],[2017,'더킹'],[2017,'불한당'],[2017,'VIP'],[2017,'삼생삼세십리도화'],[2016,'아가씨'],[2016,'럭키'],[2016,'아수라'],[2016,'덕혜옹주'],
+[2015,'대호'],[2015,'암살'],[2015,'베테랑'],[2015,'뷰티 인사이드'],[2014,'군도'],[2014,'타짜2'],[2014,'우는 남자'],[2013,'베를린'],[2013,'스토커'],[2013,'은밀하게 위대하게'],[2013,'감기'],[2013,'설국열차'],[2013,'화이'],
+[2010,'적인걸'],[2009,'박쥐'],[2009,'마더'],[2009,'전우치'],[2006,'괴물'],[2006,'사이보그지만 괜찮아'],[2005,'친절한 금자씨'],[2005,'남극일기'],[2003,'올드보이'],[2001,'무사'],[2000,'플란다스의 개']];
+let LANG='ko';try{if(localStorage.getItem('4cp-lang')==='en')LANG='en'}catch(e){}
+const L10N=[];
+const FEN={"서울의 봄": "12.12: The Day", "헤어질 결심": "Decision to Leave", "음양사": "The Yin-Yang Master", "남산의 부장들": "The Man Standing Next", "반도": "Peninsula", "완벽한 타인": "Intimate Strangers", "백두산": "Ashfall", "천문: 하늘에 묻는다": "Forbidden Dream", "7년의 밤": "Seven Years of Night", "고검기담": "Gu Jian Qi Tan", "삼체": "The Three-Body Problem", "옥자": "Okja", "더킹": "The King", "불한당": "The Merciless", "VIP": "V.I.P.", "삼생삼세십리도화": "Once Upon a Time", "아가씨": "The Handmaiden", "럭키": "Luck-Key", "아수라": "Asura: The City of Madness", "덕혜옹주": "The Last Princess", "대호": "The Tiger", "암살": "Assassination", "베테랑": "Veteran", "뷰티 인사이드": "The Beauty Inside", "군도": "Kundo: Age of the Rampant", "타짜2": "Tazza: The Hidden Card", "우는 남자": "No Tears for the Dead", "베를린": "The Berlin File", "스토커": "Stoker", "은밀하게 위대하게": "Secretly, Greatly", "감기": "The Flu", "설국열차": "Snowpiercer", "화이": "Hwayi: A Monster Boy", "적인걸": "Detective Dee", "박쥐": "Thirst", "마더": "Mother", "전우치": "Woochi", "괴물": "The Host", "사이보그지만 괜찮아": "I'm a Cyborg, But That's OK", "친절한 금자씨": "Lady Vengeance", "남극일기": "Antarctic Journal", "올드보이": "Oldboy", "무사": "Musa", "플란다스의 개": "Barking Dogs Never Bite"};const tt=k=>LANG==='en'&&FEN[k]?FEN[k]:k;
+const AEN=[["2018", "90th Academy Awards, VFX Bake-off 10", "Okja", 1], ["2019", "AEAF Awards Bronze", "Blade & Soul 2"], ["2018", "ASIA-EU Cartoon Connection Best Movie", "GAUNTLET"], ["2017", "SIGGRAPH Asia Computer Animation Festival, Official Selection", "The Tiger"], ["2016", "Grand Bell Awards Best VFX · Chunsa Film Art Awards Best Technical Achievement", "The Tiger"], ["2012", "Minister of Culture, Sports and Tourism Award", "Jeju, Island of the Gods"], ["2012", "Korea Content Award Best VFX", "Robot Trains"], ["2010", "Golden Horse Awards Best Visual Effects", "Detective Dee"], ["2010", "Asian Film Awards Best Visual Effects", "Thirst"], ["2010", "Yeosu International SFX Congress, Best Visual Effects", "Woochi"], ["2007", "Málaga Fantastic Film Festival, Best Visual Effects", "I'm a Cyborg, But That's OK"], ["2006", "Grand Bell Awards · Blue Dragon Film Awards Best VFX", "The Host"]];
+const IPEN=[{"t": "Coney Circus", "st": "In production", "cr": "Directed by Han Se-jin", "d": "Over 40% complete. Targeting completion in late 2027."}, {"t": "Fantastic Ani", "st": "Pre-production", "cr": "Original by Lee Hyun-jung", "d": "Script and storyboard complete. Main production starts in 2027, targeting late 2027."}, {"t": "THELMA", "st": "In development", "cr": "Original by Park Chan-wook · Adaptation", "d": "An animated adaptation of Park Chan-wook's original story."}, {"t": "Eco Robot", "st": "Pre-production", "cr": "Original by Lee Jeon-Hyoung", "d": "Script and concept complete, promo film produced. Targeting mid-2028."}, {"t": "GAUNTLET", "st": "In development", "cr": "Original by Lee Jeon-Hyoung", "d": "Winner, Best Movie at ASIA-EU Cartoon Connection 2018."}];
+const PEN={"lee": {"role": "Creative Director", "name": "Lee Jeon-Hyoung", "aff": ["CEO, 4th CREATIVE PARTY", "VFX Supervisor", "Kyung Hee University (Industrial Design), Kyunggi High School"], "list": [["2019", "Member, Academy of Motion Picture Arts and Sciences"], ["2018", "90th Academy Awards, Visual Effects Top 10"], ["2010", "4th Asian Film Awards, Best Visual Effects"], ["2007", "10th Málaga International Fantastic Film Festival, Special Effects Award"]]}, "han": {"role": "Director, Producer", "name": "Han Se-jin", "aff": ["Former CEO, Circus Image Works · 24 years in animation", "Visual Design, Kyung Hee Univ. · MA/PhD Video Interaction, Hongik Univ."], "list": [["2025", "Planned the animation 'Coney Circus'"], ["2024", "Storyboards for the theatrical animation 'The Trap'"], ["2023", "Produced the animation 'After School War'"], ["2022", "Corporate animation and multi-screen films for Samsung Care+, Hyundai Hydrogen Wave, Hyundai PBV and SSG Jrilla"]]}, "hjl": {"role": "Director", "name": "Lee Hyun-jung", "aff": ["Animation director and webtoon artist", "Dept. of Cartoon & Animation, Sejong University"], "list": [["2024", "Finalist, 'Today's Our Comics' · Golden Bridge Award (Grand Prize), 7th Busan Global Webtoon Awards"], ["2022", "Writer and artist, webtoon 'Fantastic Ani'"], ["2021", "Artist, webtoon 'Plus Minus Zero'"], ["2019", "Short animation 'Gugu', competition selection at the Stuttgart International Festival, Germany"]]}};
+const won=new Set(['괴물','사이보그지만 괜찮아','박쥐','전우치','적인걸','대호','옥자']);
+const ips=[
+ {t:'코니서커스',st:'제작 중',on:1,cr:'감독 한세진',d:'진행률 40% 이상. 2027년 하반기 완성 목표.',k:'connie'},
+ {t:'환상의 애니',st:'본편 준비',cr:'원작 이현중',d:'시나리오와 스토리보드 완료. 2027년 본편 착수, 하반기 완성 목표.',k:'anne'},
+ {t:'셀마',st:'개발 중',cr:'원작 박찬욱 · 각색 · THELMA',d:'박찬욱 감독 원작을 애니메이션으로 각색하고 있습니다.',k:'thelma'},
+ {t:'에코로봇',st:'본편 준비',cr:'원작 이전형',d:'시나리오와 컨셉 완료, 프로모션 영상 제작. 2028년 중반 완성 목표.',k:'eco'},
+ {t:'건틀렛',st:'개발 중',cr:'원작 이전형 · GAUNTLET',d:'2018 ASIA-EU Cartoon Connection Best Movie 수상 기획.',k:'gaunt'}
+];
+const awards=[['2018','제90회 아카데미 시각효과 Bake-off 10','옥자',1],['2019','AEAF Awards Bronze','블레이드앤소울2'],['2018','ASIA-EU Cartoon Connection Best Movie','건틀렛'],
+['2017','SIGGRAPH Asia Computer Animation Festival 공식 선정','대호'],['2016','대종상영화제 시각효과상 · 춘사영화제 최고기술상','대호'],['2012','문화체육관광부 장관상','신들의 섬 제주'],
+['2012','Korea Content Award Best VFX','로봇트레인'],['2010','금마장 시각효과상','적인걸'],['2010','아시안필름어워드 시각효과상','박쥐'],['2010','여수국제SFX콩그레스 최우수시각효과상','전우치'],
+['2007','말라가 판타스틱 영화제 시각효과상','사이보그지만 괜찮아'],['2006','대종상 · 청룡영화상 시각효과상','괴물']];
+
+/* ---------- bitmaps ---------- */
+const symRows=(()=>{const CW=4,f=new Set(['0,0','2,0','4,0','6,0','2,2','4,2','6,2','8,2']);for(let x=0;x<9;x++)f.add(x+',1');
+ const r=[];for(let y=0;y<12;y++){let s='';for(let x=0;x<36;x++){const on=f.has(Math.floor(x/CW)+','+Math.floor(y/CW));s+=on?(Math.random()<.035?'o':'#'):'.'}r.push(s)}const c=[];r.forEach((s,y)=>[...s].forEach((ch,x)=>{if(ch==='#')c.push([y,x])}));let k=1+Math.floor(Math.random()*3);while(k--&&c.length){const[y,x]=c.splice(Math.floor(Math.random()*c.length),1)[0];r[y]=r[y].slice(0,x)+'p'+r[y].slice(x+1)}return r})();
+const FONT={'0':['.###.','#...#','#...#','#...#','#...#','#...#','.###.'],'1':['..#..','.##..','..#..','..#..','..#..','..#..','.###.'],'2':['.###.','#...#','....#','...#.','..#..','.#...','#####'],
+'3':['#####','...#.','..#..','...#.','....#','#...#','.###.'],'4':['...#.','..##.','.#.#.','#..#.','#####','...#.','...#.'],'5':['#####','#....','####.','....#','....#','#...#','.###.'],
+'6':['..##.','.#...','#....','####.','#...#','#...#','.###.'],'7':['#####','....#','...#.','..#..','.#...','.#...','.#...'],'8':['.###.','#...#','#...#','.###.','#...#','#...#','.###.'],
+'9':['.###.','#...#','#...#','.####','....#','...#.','.##..'],'+':['.....','..o..','..o..','ooooo','..o..','..o..','.....']};
+const numRows=str=>{const ch=[...str],W=4*6+1,pad=W-(ch.length*6+1),L=Math.floor(pad/2),rows=[];for(let y=-1;y<8;y++){let s='.';ch.forEach(c=>{s+=(y<0||y>6)?'.....':FONT[c][y];s+='.'});rows.push('.'.repeat(L)+s+'.'.repeat(pad-L))}return rows};
+const gen=(w,h,fn)=>{const r=[];for(let y=0;y<h;y++){let s='';for(let x=0;x<w;x++)s+=fn(x,y)||'.';r.push(s)}return r};
+const emb={"anne": ["................................", "..................kkkkkk........", "................kk.....kk.......", "..............kk...kkkk.kk......", ".......kkkkkk.k..kkk............", "......kk....kkkkkk...kk....k....", "......k.........k..kk......kk...", "......k.........k.k.........kk..", "......k........k.k...........k..", ".....kk........kkk...........kk.", "....kk.........kk.............k.", "...k............k.............k.", "..kk...........kkk............kk", "..k............k..............kk", "..k............k...............k", "..k............k..............kk", "..k............k..............kk", "..k...........k...............k.", "...k.........kk...............k.", "...kk........k...............kk.", "...kkkk.....k...............kk..", "kkk..kkkkkkk................k...", "......kkkkk...............kk....", ".........................kk.....", ".......kkkk..........kkkk.......", "................kkkkkk..........", ".........kk..kkkk...............", "............kk..................", "...........kk...................", "...........k....................", "................................"], "eco": ["................", "..rrrrrrrrrrrr..", ".rrkkkkkkkkkkrr.", ".rkwwwkkkkwwwkr.", ".rkwkwkkkkwkwkr.", ".rkwwwkkkkwwwkr.", ".rrkkkkkkkkkkrr.", ".rrrrwwwwwrrrrr.", ".rrrrrrrrrrrrrr.", "RrrrrrrrrrrwwwrR", "RRrrrrrrrrrwrwRR", ".RRRRRRRRRRwwwR."], "connie": [".......yy.......", "......yyyy......", ".yyy.yyyyyy.yyy.", "yyyyywwwwwwyyyyy", "yyyywwwwwwwwyyyy", "yyywwbwwwwbwwyyy", ".yywwbwwwwbwwyy.", "..wpwwwwwwwwpw..", "...wwwwmmwwwww..", "..wwwwwwwwwwwww.", "nwnwnwnwnwnwnwnw", "nnnnnnnwnnnnnnnn"], "gaunt": ["................", ".....yyyyyy.....", "....yyyyyyyy....", "...yyy....yy....", "...yy...........", "...yy...yyyyy...", "...yy...yyyyy...", "...yy......yy...", "...yyy....yyy...", "....yyyyyyyy....", ".....yyyyyy.....", "................"], "thelma": ["kkkkkkkkkkkkkkkkkkkkkkkkkkkk", "k..........................k", "k..........................k", "k.kkk.k....k..k............k", "k..k..k...k.k.k..kkkk...kk.k", "k..k..kk..kkk.k..k.k.k.k.k.k", "k..k..k.k.k...k..k.k.k.k.k.k", "k..k..k.k..kk.kk.k.k.k..kk.k", "k..........................k", "k..........................k", "kkkkkkkkkkkkkkkkkkkkkkkkkkkk"]};
+const EPAL={"anne": {".": "#c2c2c2", "k": "#141414"}, "eco": {".": "#2b1a17", "r": "#c0392b", "R": "#7d1f18", "k": "#0e0c12", "w": "#eeeeea"}, "connie": {".": "#d6d4d0", "y": "#e8bf45", "w": "#f1ede6", "b": "#2c63b8", "n": "#1d2f66", "p": "#e9a7a0", "m": "#d98a2e"}, "gaunt": {".": "#e6a6a6", "y": "#c08a26"}, "thelma": {".": "#f2f1ed", "k": "#121212"}};
+const morph=(()=>{const W=24,H=10;
+ const film=(x,y)=>(y===0||y===9)?(x%3===1?'.':'#'):(y===1||y===8)?'#':(x===0||x===8||x===16||x===23)?'#':'.';
+ const star=(x,y)=>{const sp=(cx,cy,L,w)=>{const dx=Math.abs(x-cx),dy=Math.abs(y-cy);return (dx<w&&dy<=L)||(dy<w&&dx<=L*1.2)||(dx+dy<=w+1.1)};
+  return sp(11.5,4.5,4.6,1)};
+ const g=fn=>{const r=[];for(let y=0;y<H;y++){let s='';for(let x=0;x<W;x++)s+=fn(x,y);r.push(s)}return r};
+ return [g(film),g((x,y)=>star(x,y)?'o':'.'),g((x,y)=>star(x,y)?'o':film(x,y))]})();
+const arrowRows=['........................','........................','........................','....aaaaaaaaaaaaaaaa....','..aaaaaaaaaaaaaaaaaaaa..','.aaaaaaAAAAAAAAAAaaaaaa.','.aaaaaa..........aaaaaa.','.aaaaaa.B......B.aaaaaa.','.AAAAAAbBbbbbbbBbAAAAAA.','......bbbbbbbbbbbB......','......bbbddddddbbB......','.q...bbbddeddeddbbB.....','.q...bbdddeddeeddbB.....','q....bbddddllddddbB.....','.q..bbbdedlllldedbbB....','q...bbbdedlllldedbbB....','.q.bbbbddddllddddbbbB...','q..bbbbddeeddddddbbbB...','.q.bbbbbddedddddBbbbB...','q.bbbbbbbddddddbbBbbbB..','.qBBBBBBBBBBBBBBBBBBBB..','..qBB..............BB...','.q......................','........................'];
+
+/* ---------- cube engine (WebGL2, instanced) ---------- */
+const lin=h=>{const n=parseInt(h.slice(1),16);return[(n>>16&255)/255,(n>>8&255)/255,(n&255)/255].map(v=>Math.pow(v,2.2))};
+const PAL={'#':lin('#e2e0e2'),'o':lin('#c08a26'),'p':lin('#c40c66'),'.':lin('#1d4434')},HEX={'#':'#e2e0e2','o':'#c08a26','p':'#c40c66','.':'#1d4434'};
+const VS=`#version 300 es
+layout(location=0)in vec3 p;layout(location=1)in vec3 n;layout(location=2)in mat4 M;layout(location=6)in vec3 c;
+uniform mat4 VP;out vec3 vN;out vec3 vC;void main(){vN=mat3(M)*n;vC=c;gl_Position=VP*M*vec4(p,1.);}`;
+const FS=`#version 300 es
+precision highp float;in vec3 vN;in vec3 vC;out vec4 o;
+void main(){vec3 n=normalize(vN);vec3 L=normalize(vec3(-.45,.75,.85));float d=max(dot(n,L),0.),hm=.5+.5*n.y;
+vec3 col=vC*(.14+.22*hm+.95*d);vec3 h=normalize(L+vec3(0.,0.,1.));col+=pow(max(dot(n,h),0.),48.)*.22;
+col+=vec3(.62,.78,1.)*pow(max(dot(n,normalize(vec3(.85,-.35,-.2))),0.),2.)*.18;o=vec4(pow(col,vec3(1./2.2)),1.);}`;
+const GEO=(()=>{const s=.44,P=[],Nn=[],I=[];[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]].forEach((f,i)=>{
+ const u=f[0]?[0,1,0]:[1,0,0],v=[f[1]*u[2]-f[2]*u[1],f[2]*u[0]-f[0]*u[2],f[0]*u[1]-f[1]*u[0]];
+ for(const [a,b] of [[-1,-1],[1,-1],[1,1],[-1,1]]){P.push(...[0,1,2].map(k=>(f[k]+a*u[k]+b*v[k])*s));Nn.push(...f)}
+ const o=i*4,fl=(f[0]+f[1]+f[2])>0;I.push(...(fl?[o,o+1,o+2,o,o+2,o+3]:[o,o+2,o+1,o,o+3,o+2]))});return{P,Nn,I}})();
+const mul=(a,b)=>{const o=new Float32Array(16);for(let i=0;i<4;i++)for(let j=0;j<4;j++){let v=0;for(let k=0;k<4;k++)v+=a[k*4+j]*b[i*4+k];o[i*4+j]=v}return o};
+const T=(x,y,z)=>new Float32Array([1,0,0,0,0,1,0,0,0,0,1,0,x,y,z,1]);
+const Sc=k=>new Float32Array([k,0,0,0,0,k,0,0,0,0,k,0,0,0,0,1]);
+const RX=a=>{const c=Math.cos(a),s=Math.sin(a);return new Float32Array([1,0,0,0,0,c,s,0,0,-s,c,0,0,0,0,1])};
+const RZ=a=>{const c=Math.cos(a),s=Math.sin(a);return new Float32Array([c,s,0,0,-s,c,0,0,0,0,1,0,0,0,0,1])};
+const RY=a=>{const c=Math.cos(a),s=Math.sin(a);return new Float32Array([c,0,-s,0,0,1,0,0,s,0,c,0,0,0,0,1])};
+const persp=(f,a,n,fr)=>{const t=1/Math.tan(f/2);return new Float32Array([t/a,0,0,0,0,t,0,0,0,0,(fr+n)/(n-fr),-1,0,0,2*fr*n/(n-fr),0])};
+const FOV=12*Math.PI/180,DIST=95,eio=p=>p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+const fields=[];
+function Field(cv,rows,o){
+ if(o.states)rows=o.states[RM&&o.once?o.states.length-1:0];
+ o=Object.assign({depth:.6,spread:4,a:.55,dur:[1.7,.6],idle:1500,place:()=>({fw:.92,fh:.88,ox:0,oy:0})},o);
+ const R=rows.length,C=Math.max(...rows.map(r=>r.length)),items=[];
+ rows.forEach((r,y)=>{for(let x=0;x<C;x++){const ch=r[x]||' ';if(ch===' ')continue;
+  items.push({x:x-(C-1)/2,y:(R-1)/2-y,z:ch==='.'?-o.depth*.8:o.depth,ch,chs:o.states?o.states.map(r=>r[y][x]):null,ax:Math.random()<.5?0:1,sg:Math.random()<.5?-1:1,dur:o.dur[0]+Math.random()*o.dur[1],f:null})}});
+ const N=items.length;
+ [...Array(N).keys()].sort(()=>Math.random()-.5).forEach((id,k)=>{items[id].t0=.15+o.spread*Math.pow(k/N,o.a)});
+ const F={cv,o,R,C,items,N,vis:false,t0:null,busy:true,mx:-1,my:-1,last:0,pos:[],end:o.spread+o.dur[0]+o.dur[1]+.2};
+ F.colOf=ch=>{if(ch===' ')ch='.';return o.pal&&o.pal[ch]?lin(o.pal[ch]):(PAL[ch]||PAL['#'])};
+ const gl=cv.getContext('webgl2',{antialias:true,alpha:true});
+ if(gl){
+  const sh=(t,src)=>{const s=gl.createShader(t);gl.shaderSource(s,src);gl.compileShader(s);return s};
+  const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(pr);
+  if(gl.getProgramParameter(pr,gl.LINK_STATUS)){
+   const vao=gl.createVertexArray();gl.bindVertexArray(vao);
+   const buf=(d,loc,sz)=>{const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(d),gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,sz,gl.FLOAT,false,0,0)};
+   buf(GEO.P,0,3);buf(GEO.Nn,1,3);
+   const ib=gl.createBuffer();gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,ib);gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(GEO.I),gl.STATIC_DRAW);
+   F.MA=new Float32Array(N*16);F.mb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,F.mb);gl.bufferData(gl.ARRAY_BUFFER,F.MA.byteLength,gl.DYNAMIC_DRAW);
+   for(let i=0;i<4;i++){gl.enableVertexAttribArray(2+i);gl.vertexAttribPointer(2+i,4,gl.FLOAT,false,64,i*16);gl.vertexAttribDivisor(2+i,1)}
+   const CA=new Float32Array(N*3);items.forEach((it,i)=>CA.set(F.colOf(it.ch),i*3));
+   const cb=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,cb);gl.bufferData(gl.ARRAY_BUFFER,CA,gl.DYNAMIC_DRAW);F.CA=CA;F.cb=cb;gl.enableVertexAttribArray(6);gl.vertexAttribPointer(6,3,gl.FLOAT,false,0,0);gl.vertexAttribDivisor(6,1);
+   gl.useProgram(pr);F.uVP=gl.getUniformLocation(pr,'VP');gl.enable(gl.DEPTH_TEST);gl.enable(gl.CULL_FACE);gl.clearColor(0,0,0,0);F.gl=gl;
+  }
+ }
+ if(!F.gl){F.ctx=gl?null:cv.getContext('2d')}
+ fields.push(F);return F;
+}
+function layout(F){
+ const d=Math.min(devicePixelRatio||1,2),W=F.cv.clientWidth,H=F.cv.clientHeight;if(!W||!H)return;
+ F.W=W;F.H=H;F.cv.width=Math.round(W*d);F.cv.height=Math.round(H*d);
+ const pl=F.o.place(W,H);
+ if(F.gl){const asp=W/H,vh=2*DIST*Math.tan(FOV/2),vw=vh*asp,gs=Math.min(pl.fw*vw/F.C,pl.fh*vh/F.R);
+  F.gl.viewport(0,0,F.cv.width,F.cv.height);F.VP=mul(persp(FOV,asp,1,200),T(0,0,-DIST));F.G0=mul(T(pl.ox*vw,pl.oy*vh,0),Sc(gs));F.G=mul(F.G0,RZ(F.rz||0))}
+ else if(F.ctx){const c=F.ctx,cs=Math.min(pl.fw*W/F.C,pl.fh*H/F.R);c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,W,H);
+  const x0=W/2+pl.ox*W-F.C*cs/2,y0=H/2-pl.oy*H-F.R*cs/2;F.items.forEach(it=>{c.fillStyle=(F.o.pal&&F.o.pal[it.ch])||HEX[it.ch]||'#888';c.fillRect(x0+(it.x+(F.C-1)/2)*cs+1,y0+((F.R-1)/2-it.y)*cs+1,cs-2,cs-2)})}
+ F.busy=true;
+}
+function frame(F,now){
+ if(F.o.rot&&F.G0){const tr=F.o.rot[F.si||0];if(Math.abs((F.rz||0)-tr)>1e-4){F.rz=(F.rz||0)+(tr-(F.rz||0))*.045;if(Math.abs(F.rz-tr)<1e-3)F.rz=tr;F.G=mul(F.G0,RZ(F.rz));F.rzBusy=1}else F.rzBusy=0}
+ if(!F.gl||!F.VP)return;
+ const t=RM?99:(now-F.t0)/1000;let busy=false;
+ for(let i=0;i<F.N;i++){const it=F.items[i];let p=(t-it.t0)/it.dur,m;
+  if(p<=0){m=Sc(0);busy=true}
+  else if(it.ch===' '&&!it.f){m=Sc(0)}
+  else{if(p<1)busy=true;p=Math.min(1,p);const e=eio(p),a=(1-e)*Math.PI*it.sg;
+   let L=T(it.x,it.y,it.z+Math.pow(1-p,3)*3);L=mul(L,mul(it.ax?RX(a):RY(a),Sc(1-.22*Math.sin(e*Math.PI))));
+   if(it.f){busy=true;const ang=it.f.ang||Math.PI/2,q=(now-it.f.t)/1400;if(it.f.to&&q>=.5&&!it.f.done){it.f.done=1;it.ch=it.f.to;it.z=it.ch==='.'?-F.o.depth*.8:F.o.depth;F.CA.set(F.colOf(it.ch),i*3);F.cd=1}if(q>=1)it.f=null;else if(q>0){const e2=eio(q);L=mul(L,mul(it.f.ax?RX(e2*ang*it.f.sg):RY(e2*ang*it.f.sg),Sc(1-.18*Math.sin(e2*Math.PI))))}}
+   m=mul(L,Sc(Math.min(1,p*3)))}
+  const w=mul(F.G,m);F.MA.set(w,i*16);F.pos[i]=w;}
+ if(F.rzBusy)busy=true;
+ const gl=F.gl;if(F.cd){F.cd=0;gl.bindBuffer(gl.ARRAY_BUFFER,F.cb);gl.bufferSubData(gl.ARRAY_BUFFER,0,F.CA)}gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.uniformMatrix4fv(F.uVP,false,F.VP);
+ gl.bindBuffer(gl.ARRAY_BUFFER,F.mb);gl.bufferSubData(gl.ARRAY_BUFFER,0,F.MA);gl.drawElementsInstanced(gl.TRIANGLES,36,gl.UNSIGNED_SHORT,0,F.N);
+ F.busy=busy;
+}
+function flip(F,i,now){const it=F.items[i];if(!it||it.f||(now-F.t0)/1000<it.t0+it.dur)return;it.f={t:now,ax:Math.random()<.5?0:1,sg:Math.random()<.5?-1:1};if(F.o.mix&&it.ch===' '){let r=Math.random()*90,c='.';for(const[k,w]of F.o.mix){if((r-=w)<0){c=k;break}}F.CA.set(F.colOf(c),i*3);F.cd=1}F.busy=true}
+function hover(F,now){let best=-1,bd=F.W*F.W;const V=F.VP;
+ for(let i=0;i<F.N;i++){const w=F.pos[i];if(!w)continue;const x=w[12],y=w[13],z=w[14];
+  const cx=V[0]*x+V[4]*y+V[8]*z+V[12],cy=V[1]*x+V[5]*y+V[9]*z+V[13],cw=V[3]*x+V[7]*y+V[11]*z+V[15];
+  const sx=(cx/cw*.5+.5)*F.W,sy=(.5-cy/cw*.5)*F.H,dd=(sx-F.mx)**2+(sy-F.my)**2;if(dd<bd){bd=dd;best=i}}
+ if(best>=0&&bd<1600)flip(F,best,now)}
+let raf=0;
+function tick(now){raf=0;let any=false;
+ for(const F of fields){if(!F.vis||F.t0==null||!F.gl)continue;any=true;
+  if(!RM&&F.o.states&&(now-F.t0)/1000>F.end+(F.o.hold||0)&&now-(F.sl||0)>F.o.period&&!(F.o.once&&(F.si||0)===F.o.states.length-1)){F.sl=now;F.si=((F.si||0)+1)%F.o.states.length;const si=F.si;F.items.forEach(it=>{const to=it.chs[si];if(to!==it.ch)it.f={t:now+(it.x+F.C/2)*55+Math.random()*250,ax:Math.random()<.5?0:1,sg:Math.random()<.5?-1:1,ang:Math.PI,to}});F.busy=true;if(F.o.onState)F.o.onState(si)}
+  if(!RM){if((now-F.t0)/1000>F.end&&now-F.last>F.o.idle){F.last=now;flip(F,Math.floor(Math.random()*F.N),now)}
+   if(F.mx>=0)hover(F,now)}
+  if(F.busy)frame(F,now)}
+ if(any&&!RM)raf=requestAnimationFrame(tick)}
+const kick=()=>{if(!raf)raf=requestAnimationFrame(tick)};
+const fio=new IntersectionObserver(es=>{const now=performance.now();for(const e of es){const F=fields.find(f=>f.cv===e.target);if(!F)continue;F.vis=e.isIntersecting;
+ if(!F.vis&&F.t0!=null&&!F.o.group)F.out=true;
+ if(F.vis&&F.out&&(F.o.replay||F.o.group)&&!RM){F.out=false;F.t0=now;F.items.forEach(it=>it.f=null);if(F.o.onReset)F.o.onReset();if(F.o.states&&F.gl){F.si=0;F.sl=0;F.rz=(F.o.rot||[0])[0];if(F.G0)F.G=mul(F.G0,RZ(F.rz));F.items.forEach((it,i)=>{it.ch=it.chs[0];it.z=it.ch==='.'?-F.o.depth*.8:F.o.depth;F.CA.set(F.colOf(it.ch),i*3)});F.cd=1}}
+ if(F.vis&&F.t0==null){F.t0=now;layout(F)}if(F.vis){F.busy=true;if(RM)frame(F,now)}}kick()},{threshold:.2});
+function addField(cv,rows,o){const F=Field(cv,rows,o);fio.observe(cv);
+ cv.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const b=cv.getBoundingClientRect();F.mx=e.clientX-b.left;F.my=e.clientY-b.top});
+ cv.addEventListener('pointerleave',()=>{F.mx=F.my=-1});return F}
+
+/* ---------- build ---------- */
+const heroF=addField($('heroCv'),symRows,{spread:5.6,place:(W,H)=>W<760?{fw:.86,fh:.3,ox:0,oy:.25}:{fw:.54,fh:.5,ox:.13,oy:.13}});
+heroF.cv.parentElement.addEventListener('click',e=>{const F=heroF;if(RM||!F.gl||F.t0==null||e.target.closest('a,button'))return;const b=F.cv.getBoundingClientRect(),mx=e.clientX-b.left,my=e.clientY-b.top,V=F.VP;let best=-1,bd=1e12;
+ for(let i=0;i<F.N;i++){const w=F.pos[i];if(!w)continue;const x=w[12],y=w[13],z=w[14],cx=V[0]*x+V[4]*y+V[8]*z+V[12],cy=V[1]*x+V[5]*y+V[9]*z+V[13],cw=V[3]*x+V[7]*y+V[11]*z+V[15],dd=((cx/cw*.5+.5)*F.W-mx)**2+((.5-cy/cw*.5)*F.H-my)**2;if(dd<bd){bd=dd;best=i}}
+ const cs=F.W/F.C;if(best<0||bd>cs*cs*4)return;const now=performance.now();F.t0=now;F.last=now;F.items.forEach(it=>it.f=null);F.busy=true;kick()});
+heroF.cv.parentElement.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const b=heroF.cv.getBoundingClientRect();heroF.mx=e.clientX-b.left;heroF.my=e.clientY-b.top});
+document.querySelectorAll('canvas[data-num]').forEach(c=>addField(c,numRows(c.dataset.num),{replay:1,spread:2.2,a:.7,idle:2600,place:()=>({fw:.96,fh:.92,ox:0,oy:0})}));
+$('rail').innerHTML=ips.map((p,i)=>'<article class="card rv" style="--d:'+(i*.06)+'s"><div class="ipc"><span class="st'+(p.on?'':' off')+'"><span class="sq"></span>'+esc(p.st)+'</span><canvas data-k="'+p.k+'" aria-hidden="true"></canvas></div><div class="cb"><span class="cr">'+esc(p.cr)+'</span><h3>'+esc(p.t)+'</h3><p>'+esc(p.d)+'</p></div></article>').join('');
+const ipText=()=>[...$('rail').children].forEach((c,i)=>{const p=LANG==='en'?Object.assign({},ips[i],IPEN[i]):ips[i];c.querySelector('.st').lastChild.textContent=p.st;c.querySelector('.cr').textContent=p.cr;c.querySelector('h3').textContent=p.t;c.querySelector('.cb p').innerHTML=esc(p.d).replace(/\.\s+(?=\S)/g,'.<br>')});L10N.push(ipText);
+document.querySelectorAll('canvas[data-k]').forEach(c=>addField(c,emb[c.dataset.k],{group:1,pal:EPAL[c.dataset.k],spread:2.4,a:.7,idle:2200,place:()=>({fw:.8,fh:.74,ox:0,oy:-.03})}));
+new IntersectionObserver(es=>{if(!es[0].isIntersecting)fields.forEach(F=>{if(F.o.group&&F.t0!=null)F.out=true})}).observe($('rail'));
+const mlab=[...document.querySelectorAll('#mlab span')];
+addField($('morphCv'),null,{states:morph,period:4200,idle:1e9,spread:2.4,a:.7,place:()=>({fw:.96,fh:.92,ox:0,oy:0}),onState:si=>mlab.forEach((m,i)=>m.classList.toggle('cur',i===si))});
+{const cv=$('ctaCv').parentElement,blank=arrowRows.map(r=>' '.repeat(r.length));if(RM)cv.classList.add('rev');
+addField($('ctaCv'),null,{states:[arrowRows,blank],pal:{a:'#f4b6c2',A:'#d993a3',b:'#f4b6c2',B:'#d993a3',d:'#fbf3e4',e:'#9db8d9',l:'#b8e0d2',q:'#d993a3'},once:1,hold:.9,period:100,idle:2400,mix:[['.',50],['o',20],['p',20]],replay:1,spread:2.6,a:.7,place:()=>({fw:.94,fh:.94,ox:0,oy:0}),onState:si=>cv.classList.toggle('rev',si===1),onReset:()=>cv.classList.remove('rev')})}
+let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{const now=performance.now();fields.forEach(F=>{if(F.t0!=null){layout(F);if(RM)frame(F,now)}});kick()},150)});
+
+/* film wall */
+const wall=$('wall'),CELLS=30,nf=films.length;let ptr=0;
+const pick=()=>{const fm=films[ptr%nf];ptr+=7;return fm};
+const fill=(el,fm,ci,nx)=>{el.className='fc '+(won.has(fm[1])?'o':['d','l','d','b'][ci%4])+(nx?' nx':'');el._fm=fm;el._ci=ci;el.innerHTML='<small>'+fm[0]+'</small><b>'+esc(tt(fm[1]))+'</b>'};
+wall.innerHTML=Array.from({length:CELLS},()=>'<div class="cell"><div class="pr"><div class="fc"></div><div class="fc nx"></div></div></div>').join('');
+const cells=[...wall.querySelectorAll('.cell')].map((el,i)=>{const pr=el.firstChild,[fa,fb]=pr.children;fill(fa,pick(),i);fa.style.transform='translateZ(0)';return{el,pr,fa,fb,i,n:i,busy:false}});
+L10N.push(()=>cells.forEach(c=>{if(c.fa._fm)fill(c.fa,c.fa._fm,c.fa._ci)}));
+const PLACE=['rotateX(90deg)','rotateX(-90deg)','rotateY(90deg)','rotateY(-90deg)'],TO=['rotateX(-90deg)','rotateX(90deg)','rotateY(-90deg)','rotateY(90deg)'];
+function turn(c){if(c.busy||!c.el.offsetParent)return;c.busy=true;
+ const dir=Math.floor(Math.random()*4),d=(dir<2?c.el.offsetHeight:c.el.offsetWidth)/2;
+ fill(c.fb,pick(),++c.n);
+ c.pr.style.transition='none';c.pr.style.transform='translateZ('+(-d)+'px)';
+ c.fa.style.transform='translateZ('+d+'px)';c.fb.style.transform=PLACE[dir]+' translateZ('+d+'px)';c.fb.style.visibility='visible';
+ void c.pr.offsetWidth;
+ c.pr.style.transition='transform 1.8s cubic-bezier(.65,0,.35,1)';c.pr.style.transform='translateZ('+(-d)+'px) '+TO[dir];
+ setTimeout(()=>{c.fa.className=c.fb.className.replace(' nx','');c.fa.innerHTML=c.fb.innerHTML;c.pr.style.transition='none';c.pr.style.transform='none';
+  c.fa.style.transform='translateZ(0)';c.fb.style.visibility='hidden';c.busy=false},1850)}
+let wallVis=false;new IntersectionObserver(es=>{wallVis=es[0].isIntersecting}).observe(wall);
+if(!RM){setInterval(()=>{if(!wallVis||document.hidden)return;const v=cells.filter(c=>c.el.offsetParent&&!c.busy);if(v.length)turn(v[Math.floor(Math.random()*v.length)])},600);
+ cells.forEach(c=>c.el.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse')turn(c)}))}
+
+/* awards */
+const awR=()=>{$('awards').innerHTML=(LANG==='en'?AEN:awards).map(a=>'<li class="rv on'+(a[3]?' top':'')+'"><span class="y"><span class="sq'+(a[3]?'':' w')+'"></span>'+a[0]+'</span><span class="a">'+esc(a[1])+'</span><span class="f">\''+esc(a[2])+'\'</span></li>').join('');};awR();L10N.push(awR);
+
+/* rail */
+
+
+/* IP rail */
+{const rail=$('rail'),pv=$('prev'),nx=$('next'),pos=$('pos');
+ const cw=()=>{const c=rail.querySelector('.card');return c?c.offsetWidth+6:rail.clientWidth};
+ 
+ const dots=$('dots');dots.innerHTML=[...rail.children].map((_,k)=>'<button aria-label="'+(k+1)+'번째 작품"><i></i></button>').join('');
+ [...dots.children].forEach((d,k)=>d.addEventListener('click',()=>rail.scrollTo({left:k*cw(),behavior:RM?'auto':'smooth'})));
+ const upd=()=>{const n=rail.children.length,max=rail.scrollWidth-rail.clientWidth,i=rail.scrollLeft>=max-4?n-1:Math.round(rail.scrollLeft/cw()),p=1;[...dots.children].forEach((d,k)=>d.classList.toggle('cur',k===i));
+  pos.textContent=(i+1)+(p>1?'-'+Math.min(n,i+p):'')+' / '+n;pv.disabled=i<=0;nx.disabled=i>=n-1};
+ const go=d=>rail.scrollTo({left:(Math.round(rail.scrollLeft/cw())+d)*cw(),behavior:RM?'auto':'smooth'});
+ pv.addEventListener('click',()=>go(-1));nx.addEventListener('click',()=>go(1));
+ rail.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();go(1)}if(e.key==='ArrowLeft'){e.preventDefault();go(-1)}});
+ rail.addEventListener('scroll',()=>requestAnimationFrame(upd),{passive:true});
+ document.querySelectorAll('a[href="#ip"]').forEach(l=>l.addEventListener('click',()=>{rail.scrollTo({left:0,behavior:'auto'});upd()}));addEventListener('resize',upd);upd()}
+
+/* profiles */
+{const P={
+ lee:{img:'p_lee.jpg',role:'크리에이티브 디렉터',name:'이전형',aff:['포스크리에이티브파티 대표','VFX 슈퍼바이저','경희대학교 산업디자인학과, 경기고등학교'],
+  list:[['2019','미국 영화예술과학 아카데미 회원'],['2018','제90회 아카데미시상식 시각효과 Top10'],['2010','제4회 아시안 필름 어워드 최우수 시각효과상 수상'],['2007','제10회 말라가 국제 판타스틱 영화제 특수효과상 수상']]},
+ han:{img:'p_han.jpg',role:'감독, 프로듀서',name:'한세진',aff:['전) 서커스이미지웍스 대표 · 애니메이션 24년 경력','경희대 시각디자인 · 홍대 영상인터렉션 석사/박사'],
+  list:[['2025','코니서커스 애니메이션 기획'],['2024',"애니 극장 '더 트랩' 스토리보드"],['2023',"'방과후전쟁' 애니메이션 제작"],['2022','삼성 케어플러스 · 현대 수소웨이브 · 현대 PBV · SSG Jrilla 다면영상 기업 애니메이션 제작']]},
+ hjl:{img:'p_hjl.jpg',line:1,role:'감독',name:'이현중',aff:['애니메이션 연출가이자 웹툰 작가','세종대학교 만화애니메이션학과'],
+  list:[['2024',"'오늘의 우리만화' 최종 후보 · '제7회 부산글로벌웹툰어워즈' 골든브릿지상(대상)"],['2022',"웹툰 '환상의 애니' 글 그림"],['2021',"웹툰 '플러스 마이너스 제로' 그림 작가"],['2019',"단편 애니메이션 '구구' 독일 슈튜트가르트 국제영화제 경쟁부문 선정"]]}};
+ const pf=$('pf');let last=null;
+ let cur=null;const open=k=>{const d0=P[k];if(!d0)return;cur=k;const d=LANG==='en'?Object.assign({},d0,PEN[k]):d0;if(!pf.classList.contains('open'))last=document.activeElement;
+  const box=$('pfImg');box.classList.toggle('line',!!d.line);const im=box.querySelector('img');im.src=d.img;im.alt=d.name;
+  $('pfRole').textContent=d.role;$('pfName').textContent=d.name;$('pfAff').innerHTML=d.aff.map(esc).join('<br>');
+  $('pfList').innerHTML=d.list.map(r=>'<li><b>'+r[0]+'</b><span>'+esc(r[1])+'</span></li>').join('');
+  pf.classList.add('open');pf.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';$('pfX').focus()};
+ L10N.push(()=>{if(pf.classList.contains('open')&&cur)open(cur)});
+ const close=()=>{pf.classList.remove('open');pf.setAttribute('aria-hidden','true');document.body.style.overflow='';if(last)last.focus()};
+ document.querySelectorAll('.team button').forEach(b=>b.addEventListener('click',()=>open(b.dataset.p)));
+ $('pfX').addEventListener('click',close);pf.addEventListener('click',e=>{if(e.target===pf)close()});
+ addEventListener('keydown',e=>{if(e.key==='Escape'&&pf.classList.contains('open'))close()})}
+
+/* nav */
+const nav=$('nav'),burger=$('burger'),sheet=$('sheet');
+const setMenu=o=>{document.body.classList.toggle('open',o);burger.setAttribute('aria-expanded',o);sheet.setAttribute('aria-hidden',!o);document.body.style.overflow=o?'hidden':''};
+burger.addEventListener('click',()=>setMenu(!document.body.classList.contains('open')));
+sheet.addEventListener('click',e=>{if(e.target.tagName==='A')setMenu(false)});
+addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false)});
+const tickC=()=>{try{$('clock').textContent=new Intl.DateTimeFormat('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Seoul'}).format(new Date())}catch(e){}};tickC();setInterval(tickC,15000);
+$('copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText('yizeon@4thparty.co.kr');$('copied').textContent=LANG==='en'?'Copied.':'복사했습니다.'}catch(e){$('copied').textContent=LANG==='en'?'Press and hold the address to copy.':'주소를 길게 눌러 복사해 주세요.'}});
+
+/* service block icons */
+document.querySelectorAll('.blk').forEach(b=>[...b.children].forEach((i,j)=>i.style.setProperty('--j',[0,1,2,5,4,3,6,7,8][j])));
+const svs=[...document.querySelectorAll('.sv')];
+const svo=new IntersectionObserver(es=>{for(const e of es)e.target.classList.toggle('lit',e.isIntersecting)},{threshold:.3});
+svs.forEach(v=>svo.observe(v));
+if(!RM)setInterval(()=>{if(document.hidden)return;const v=svs.filter(x=>x.classList.contains('lit'));if(!v.length)return;
+ const sv=v[Math.floor(Math.random()*v.length)],c=[...sv.querySelectorAll('.blk i:not(.o)')],i=c[Math.floor(Math.random()*c.length)];if(!i||i.dataset.b)return;i.dataset.b=1;
+ const ax=Math.random()<.5?'rotateX':'rotateY',sg=Math.random()<.5?1:-1;
+ const a1=i.animate([{transform:'none'},{transform:ax+'('+90*sg+'deg)'}],{duration:500,easing:'ease-in'});
+ a1.onfinish=()=>{i.classList.toggle('on');i.animate([{transform:ax+'('+(-90*sg)+'deg)'},{transform:'none'}],{duration:500,easing:'ease-out'}).onfinish=()=>{delete i.dataset.b}}},700);
+
+/* reveals */
+const io=new IntersectionObserver(es=>{for(const e of es)if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target)}},{threshold:.08});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+{let q=0;document.querySelectorAll('#stair .step').forEach(st=>{const b=st.querySelector('.b'),n=+getComputedStyle(st).getPropertyValue('--n'),y=b.textContent;
+ let h='<em style="--q:'+(q+n-1)+'">'+y+'</em>';for(let k=0;k<n;k++)h+='<i class="u" style="--q:'+(q++)+'"></i>';b.innerHTML=h});
+ const sio=new IntersectionObserver(es=>{for(const e of es)e.target.classList.toggle('on',e.isIntersecting)},{threshold:.35});sio.observe($('stair'))}
+setTimeout(()=>document.querySelectorAll('.rv:not(.on)').forEach(el=>{if(el.getBoundingClientRect().top<innerHeight)el.classList.add('on')}),2500);
+requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.add('ready')));
+const hero=heroF.cv.parentElement;
+const onScroll=()=>{const sp=Math.min(1,Math.max(0,scrollY/(hero.clientHeight*.9)));heroF.cv.style.opacity=String(1-sp*.85);nav.classList.toggle('solid',scrollY>40)};
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+/* language */
+{const btns=[...document.querySelectorAll('.lang button')];
+ const apply=l=>{LANG=l;try{localStorage.setItem('4cp-lang',l)}catch(e){}root.lang=l;
+  document.querySelectorAll('[data-en]').forEach(el=>{if(el.dataset.ko==null)el.dataset.ko=el.innerHTML;el.innerHTML=l==='en'?el.dataset.en:el.dataset.ko});
+  document.querySelectorAll('.lead,.sv p,.asset p').forEach(el=>{el.innerHTML=el.innerHTML.replace(/\.\s+(?=\S)/g,'.<br>')});
+  btns.forEach(b=>{const on=b.dataset.l===l;b.classList.toggle('cur',on);b.setAttribute('aria-pressed',on)});L10N.forEach(f=>f())};
+ btns.forEach(b=>b.addEventListener('click',()=>apply(b.dataset.l)));apply(LANG)}
+}
+</script>
+</body>
+</html>
