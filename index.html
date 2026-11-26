@@ -208,6 +208,10 @@ h1 .m{color:rgba(230,228,230,.42)}
 .mail{margin-top:32px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .mail span{font-size:clamp(16px,1.8vw,20px);padding:10px 16px;background:#0f241a;border-radius:0;box-shadow:inset 0 0 0 1px #1f3d30;word-break:break-all}
 .copied{min-height:22px;margin-top:12px;font-size:13px;color:var(--mu)}
+.partners{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:28px 44px;padding:8px 0 56px}
+.partners img{height:22px;width:auto;display:block}
+.partners .pl-nc{height:20px}.partners .pl-atinum{height:30px}.partners .pl-mirae{height:30px}.partners .pl-com2us{height:19px}.partners .pl-devsisters{height:19px}
+@media(max-width:760px){.partners{gap:24px 30px;padding:0 0 44px}.partners img{height:18px}.partners .pl-nc{height:17px}.partners .pl-atinum,.partners .pl-mirae{height:25px}.partners .pl-com2us,.partners .pl-devsisters{height:15px}}
 footer{border-top:1px solid var(--ln);padding:28px 0 max(28px,env(safe-area-inset-bottom))}
 footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--mu)}
 footer .mark{color:var(--fg)}
@@ -367,6 +371,7 @@ html{scroll-behavior:auto}
   <div class="pfb"><button class="pfx" id="pfX" aria-label="닫기"></button><span class="role" id="pfRole"></span><h3 id="pfName"></h3><div class="aff" id="pfAff"></div><ul id="pfList"></ul></div></div>
 </div>
 
+<div class="wrap partners" aria-label="Partners"><img src="lg_nc.png" alt="NC" class="pl-nc"><img src="lg_atinum.png" alt="Atinum Investment" class="pl-atinum"><img src="lg_com2us.png" alt="Com2uS N" class="pl-com2us"><img src="lg_alibaba.png" alt="Alibaba" class="pl-alibaba"><img src="lg_mirae.png" alt="Mirae Asset" class="pl-mirae"><img src="lg_devsisters.png" alt="Devsisters" class="pl-devsisters"></div>
 <footer><div class="wrap">
   <a class="mark" href="#top"><svg viewBox="0 0 9 3" shape-rendering="crispEdges" aria-hidden="true"><path d="M0 0h1v1h1v-1h1v1h1v-1h1v1h1v-1h1v1h2v2h-1v-1h-1v1h-1v-1h-1v1h-1v-1h-1v1h-1v-1h-2z"/></svg>4th CREATIVE PARTY</a>
   <span data-en="Seoul, Korea">포스크리에이티브파티 · 서울</span>
