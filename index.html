@@ -150,7 +150,8 @@ h1 .m{color:rgba(230,228,230,.42)}
 /* awards */
 .aw{list-style:none;display:grid;gap:4px}
 .aw li{display:grid;grid-template-columns:72px minmax(0,1fr) minmax(0,220px);gap:20px;align-items:center;padding:16px 18px;background:#0c1d15;border-radius:0;transition:background .25s}
-.aw li:hover{background:#163a2c}
+.aw li:hover,.aw li.sel{background:#163a2c}
+.aw li{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .aw .y{font-variant-numeric:tabular-nums;color:var(--mu);font-size:14px;display:flex;align-items:center;gap:10px}
 .aw .a{font-size:16px}
 .aw .f{text-align:right;color:var(--mu);font-size:14px}
@@ -641,6 +642,8 @@ addEventListener('scroll',onScroll,{passive:true});onScroll();
   btns.forEach(b=>{const on=b.dataset.l===l;b.classList.toggle('cur',on);b.setAttribute('aria-pressed',on)});L10N.forEach(f=>f())};
  btns.forEach(b=>b.addEventListener('click',()=>apply(b.dataset.l)));apply(LANG)}
 }
+
+document.querySelectorAll('.aw').forEach(ul=>ul.addEventListener('click',e=>{const li=e.target.closest('li');if(!li)return;const was=li.classList.contains('sel');document.querySelectorAll('.aw li.sel').forEach(x=>x.classList.remove('sel'));if(!was)li.classList.add('sel')}));
 </script>
 </body>
 </html>
