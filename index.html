@@ -583,7 +583,7 @@ addField($('morphCv'),null,{states:morph,period:4200,idle:1e9,spread:2.4,a:.7,pl
  const pd=(x,y)=>{const ax=Math.abs(x-11.5),ay=Math.abs(y-11.5);return Math.min(Math.max(ax-3,ay-9),Math.max(ax-9,ay-3))};
  const amp=t=>t<1.6?1:t<3.4?1-(t-1.6)/1.8:0;
  const mask=(x,y,t)=>pd(x,y)+amp(t)*(1.6*Math.sin(x*.7+t*1.9)+1.3*Math.sin(y*.8-t*1.5)+1.1*Math.sin((x-y)*.5+t*2.6))<.2;
- const two=()=>R()<.5?'#':'o';
+ const two=()=>R()<.75?'#':'o';
  const rows0=[];for(let y=0;y<G;y++){let s='';for(let x=0;x<G;x++)s+=pd(x,y)<0?two():'.';rows0.push(s)}
  const blank=rows0.map(r=>' '.repeat(G));
  const W0=5.6,WS=3.8;let S=null;const reset=()=>{S={pk:1.4,rev:0}};reset();
@@ -599,7 +599,7 @@ addField($('morphCv'),null,{states:morph,period:4200,idle:1e9,spread:2.4,a:.7,pl
    const inM=mask(it.gx,it.gy,t);
    if(inM&&it.ch==='.'){if(R()<.25)fl(it,now,two())}
    else if(!inM&&it.ch!=='.'){if(R()<.25)fl(it,now,'.')}
-   else if(inM&&R()<.5)fl(it,now,it.ch==='#'?'o':'#')}
+   else if(inM&&R()<.5)fl(it,now,two())}
   if(t>S.pk&&t<W0+WS){const n=R()<.6?1:2;for(let i=0;i<n;i++){const it=F.items[Math.floor(R()*F.N)];if(it.f||it.pb!=null||it.wind||it.gone||t<it.t0+it.dur)continue;it.pb=it.ch;fl(it,now,'p');it.pe=t+1.4+R()*.4}S.pk=t+1.1+R()*1.3}
   if(t>W0+WS+3)S.done=1};
  addField($('ctaCv'),null,{states:[rows0,blank],once:1,hold:9999,period:100,idle:2400,mix:[['.',50],['o',20],['p',20]],replay:1,spread:2.6,a:.7,place:()=>({fw:.93,fh:.93,ox:0,oy:0}),script,onState:si=>cv.classList.toggle('rev',si===1),onReset:()=>{TL.forEach(x=>x.classList.remove('on'));reset();fields.forEach(F=>F.cv===$('ctaCv')&&F.items.forEach(it=>{it.pb=null;it.wind=null;it.gone=0;it.gx=null}))}})}
