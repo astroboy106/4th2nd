@@ -135,6 +135,7 @@ h1 .m{color:rgba(230,228,230,.42)}
 .rail .card{flex:0 0 calc((100% - 18px)/3.3);scroll-snap-align:start;scroll-snap-stop:always}
 .js .rail .rv{transform:none}
 .arrows{display:flex;gap:8px;align-items:center}.arrows .key{width:48px;padding:0;justify-content:center}.arrows .key:disabled{opacity:.35}
+.ipnote{margin-top:28px;max-width:none}
 .dots{display:flex;gap:6px;margin-top:18px}.dots button{width:28px;height:28px;display:grid;place-items:center}.dots button i{width:10px;height:10px;background:#1d4434;transition:background .3s,transform .3s}.dots button.cur i{background:var(--ac);transform:scale(1.2)}
 .pos{font-size:13px;color:var(--mu);font-variant-numeric:tabular-nums;margin-right:8px}
 .card{background:#0c1d15;border-radius:0;box-shadow:inset 0 0 0 1px #183528;overflow:hidden;display:flex;flex-direction:column}
@@ -347,7 +348,7 @@ html{scroll-behavior:auto}
     <div><div class="lbl rv" style="margin-bottom:18px" data-en="&lt;span class=&quot;sq w&quot;&gt;&lt;/span&gt;Original IP"><span class="sq w"></span>오리지널 IP</div><h2 class="rv" data-en="Five animated films, &lt;span class=&quot;m&quot;&gt;built one at a time.&lt;/span&gt;">다섯 편의 애니메이션을 <span class="m">순서대로 짓고 있습니다.</span></h2></div>
     <div class="arrows"><span class="pos" id="pos">1 / 5</span><button class="key d" id="prev" aria-label="이전 작품"><svg viewBox="0 0 12 12"><path d="M8 2 4 6l4 4"/></svg></button><button class="key d" id="next" aria-label="다음 작품"><svg viewBox="0 0 12 12"><path d="m4 2 4 4-4 4"/></svg></button></div>
   </div>
-  <div class="railwrap"><div class="rail" id="rail" tabindex="0" aria-label="IP 목록"></div><div class="dots" id="dots"></div></div>
+  <div class="railwrap"><div class="rail" id="rail" tabindex="0" aria-label="IP 목록"></div><div class="dots" id="dots"></div><p class="lead rv ipnote" data-en="Every 4th CREATIVE PARTY IP is developed as both animation and game.">포스의 모든 IP는 애니메이션과 게임으로 함께 개발합니다.</p></div>
 </section>
 
 <section class="sec" style="padding-top:0">
