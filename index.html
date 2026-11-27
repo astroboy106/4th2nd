@@ -271,8 +271,13 @@ html{scroll-behavior:auto}
 .cta .cv img{display:none!important}
 .cta .cv{background:#0c1d15;box-shadow:inset 0 0 0 1px #183528}
 .lgt{position:absolute;inset:3.5%;display:grid;grid-template-columns:repeat(24,1fr);grid-template-rows:repeat(24,1fr);perspective:600px;z-index:0}
-.lgt i{display:block;background-image:url(logo.jpg);background-size:2400% 2400%;transform:var(--r);opacity:0;transition:transform .7s cubic-bezier(.3,.7,.3,1),opacity .25s;backface-visibility:hidden}
+.lgt i{display:block;background-image:url(logo_n.jpg);background-size:2400% 2400%;transform:var(--r);opacity:0;transition:transform .7s cubic-bezier(.3,.7,.3,1),opacity .25s;backface-visibility:hidden}
 .lgt i.on{transform:none;opacity:1}
+.l2{position:absolute;left:55.09%;top:58.52%;width:19.56%;height:19.56%;perspective:500px;pointer-events:none}
+.l2 b{position:absolute;width:50%;height:50%;transform-style:preserve-3d;opacity:0}
+.l2 b.on{opacity:1;transition:transform 1.25s cubic-bezier(.25,.8,.3,1),opacity .15s}
+.l2 s{position:absolute;inset:0;backface-visibility:hidden;text-decoration:none}
+.l2 s.fr{background:url(logo.jpg) no-repeat;background-size:1022.5% 1022.5%}
 .cta .cv canvas{z-index:1}
 </style></head>
 <body>
@@ -580,14 +585,22 @@ addField($('morphCv'),null,{states:morph,period:4200,idle:1e9,spread:2.4,a:.7,pl
 {const cv=$('ctaCv').parentElement,G=24,R=Math.random;
  const lg=document.createElement('div');lg.className='lgt';const TL=[];const D=['rotateX(90deg)','rotateX(-90deg)','rotateY(90deg)','rotateY(-90deg)'];
  for(let y=0;y<G;y++)for(let x=0;x<G;x++){const d=document.createElement('i');d.style.backgroundPosition=(x*100/(G-1))+'% '+(y*100/(G-1))+'%';d.style.setProperty('--r',D[Math.floor(R()*4)]);lg.appendChild(d);TL.push(d)}
- cv.insertBefore(lg,cv.firstChild);if(RM)TL.forEach(x=>x.classList.add('on'));
+ const l2=document.createElement('div');l2.className='l2';lg.appendChild(l2);const C2=[];const SC=['#1d4434','#e2e0e2','#183528','#2a5a45','#f4f2ec'];
+ for(let k=0;k<4;k++){const cx=k%2,cy=k>>1,b=document.createElement('b');b.style.left=cx*50+'%';b.style.top=cy*50+'%';
+  b.innerHTML='<s class="fr" style="background-position:'+((676+cx*120)/(1227-120)*100)+'% '+((718+cy*120)/(1227-120)*100)+'%"></s>'+[1,2,3,4,5].map(i=>'<s style="background:'+SC[(i+k)%5]+'"></s>').join('');l2.appendChild(b);C2.push(b)}
+ const FT=['','rotateY(180deg)','rotateY(90deg)','rotateY(-90deg)','rotateX(90deg)','rotateX(-90deg)'];
+ const c2set=on=>{C2.forEach((b,k)=>{const h=b.offsetWidth/2;[...b.children].forEach((f,i)=>f.style.transform=FT[i]+' translateZ('+h+'px)');
+  b.classList.remove('on');const ax=R()<.5?'X':'Y',sg=R()<.5?-1:1,n=[270,450,360,540][k];b.style.transform='translateZ('+(-h)+'px) rotate'+ax+'('+(sg*n)+'deg) translateZ('+h+'px)';
+  if(on){void b.offsetWidth;b.classList.add('on');b.style.transform='none'}})};
+ const c2go=()=>{c2set(false);const dl=[0,520,190,880];[2,0,3,1].forEach((k,j)=>setTimeout(()=>{const b=C2[k];void b.offsetWidth;b.classList.add('on');b.style.transform='none'},dl[j]))};
+ cv.insertBefore(lg,cv.firstChild);if(RM){TL.forEach(x=>x.classList.add('on'));requestAnimationFrame(()=>c2set(true))}
  const pd=(x,y)=>{const ax=Math.abs(x-11.5),ay=Math.abs(y-11.5);return Math.min(Math.max(ax-3,ay-9),Math.max(ax-9,ay-3))};
  const amp=t=>t<1.6?1:t<3.4?1-(t-1.6)/1.8:0;
  const mask=(x,y,t)=>pd(x,y)+amp(t)*(1.6*Math.sin(x*.7+t*1.9)+1.3*Math.sin(y*.8-t*1.5)+1.1*Math.sin((x-y)*.5+t*2.6))<.2;
  const two=()=>R()<.75?'#':'o';
  const rows0=[];for(let y=0;y<G;y++){let s='';for(let x=0;x<G;x++)s+=pd(x,y)<0?two():'.';rows0.push(s)}
  const blank=rows0.map(r=>' '.repeat(G));
- const W0=5.6,WS=3.8;let S=null;const reset=()=>{S={pk:1.4,rev:0}};reset();
+ const W0=5.6,WS=3.8;let S=null;const reset=()=>{S={pk:1.4,rev:0,c2:0}};reset();
  const fl=(it,now,to)=>{it.f={t:now,ax:R()<.5?0:1,sg:R()<.5?-1:1,ang:Math.PI,to}};
  const script=(F,now)=>{if(F.t0==null||S.done)return;const t=(now-F.t0)/1000;F.busy=true;
   if(!S.rev&&t>W0){S.rev=1;F.si=1}
@@ -602,8 +615,9 @@ addField($('morphCv'),null,{states:morph,period:4200,idle:1e9,spread:2.4,a:.7,pl
    else if(!inM&&it.ch!=='.'){if(R()<.25)fl(it,now,'.')}
    else if(inM&&R()<.5)fl(it,now,two())}
   if(t>S.pk&&t<W0+WS){const n=R()<.6?1:2;for(let i=0;i<n;i++){const it=F.items[Math.floor(R()*F.N)];if(it.f||it.pb!=null||it.wind||it.gone||t<it.t0+it.dur)continue;it.pb=it.ch;fl(it,now,'p');it.pe=t+1.4+R()*.4}S.pk=t+1.1+R()*1.3}
+  if(!S.c2&&t>9.0){S.c2=1;c2go()}
   if(t>W0+WS+3)S.done=1};
- addField($('ctaCv'),null,{states:[rows0,blank],once:1,hold:9999,period:100,idle:2400,mix:[['.',50],['o',20],['p',20]],replay:1,spread:2.6,a:.7,place:()=>({fw:.93,fh:.93,ox:0,oy:0}),script,onState:si=>cv.classList.toggle('rev',si===1),onReset:()=>{TL.forEach(x=>x.classList.remove('on'));reset();fields.forEach(F=>F.cv===$('ctaCv')&&F.items.forEach(it=>{it.pb=null;it.wind=null;it.gone=0;it.gx=null}))}})}
+ addField($('ctaCv'),null,{states:[rows0,blank],once:1,hold:9999,period:100,idle:2400,mix:[['.',50],['o',20],['p',20]],replay:1,spread:2.6,a:.7,place:()=>({fw:.93,fh:.93,ox:0,oy:0}),script,onState:si=>cv.classList.toggle('rev',si===1),onReset:()=>{TL.forEach(x=>x.classList.remove('on'));c2set(false);reset();fields.forEach(F=>F.cv===$('ctaCv')&&F.items.forEach(it=>{it.pb=null;it.wind=null;it.gone=0;it.gx=null}))}})}
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{const now=performance.now();fields.forEach(F=>{if(F.t0!=null){layout(F);if(RM)frame(F,now)}});kick()},150)});
 
 /* film wall */
