@@ -12,10 +12,10 @@
 /* VOICE   정면, 정확, 느린 회전. 장식은 없고 모든 것이 블록 단위로 쌓인다.
    IDEA    큐브 한 개가 페이지의 단위: 심볼, 숫자, IP 엠블럼, 필름 월, 연표가 모두 블록으로 지어진다
    PICTURE WebGL 큐브 필드(히어로·수치·IP·문의) + CSS 회전 프리즘 벽(필모그래피)
-   COLOUR  사진 팔레트: 욕조 그린 #07130d·#1d4434 / 타일 화이트 #e2e0e2 / 타월 다크 옐로 #e09a1f / 포스 로고 마젠타 #c40c66(드물게)
+   COLOUR  사진 팔레트: 욕조 그린 #07130d·#1d4434 / 타일 화이트 #e2e0e2 / 타월 다크 옐로 #ffbf24 / 포스 로고 마젠타 #c40c66(드물게)
    TYPE    Inter Tight + Noto Sans KR. LAYOUT 정사각 모듈, 모서리 4px, 버튼은 두께가 있는 키 */
 html,body{background:#07130d}
-:root{color-scheme:dark;--bg:#07130d;--fg:#e6e4e6;--mu:rgba(230,228,230,.55);--ln:rgba(230,228,230,.1);--cl:#e2e0e2;--cd:#163a2c;--ac:#e09a1f;
+:root{color-scheme:dark;--bg:#07130d;--fg:#e6e4e6;--mu:rgba(230,228,230,.55);--ln:rgba(230,228,230,.1);--cl:#e2e0e2;--cd:#163a2c;--ac:#ffbf24;
 --e:cubic-bezier(.22,1,.36,1);--io:cubic-bezier(.65,0,.35,1);--w:84rem;--g:clamp(18px,4.4vw,64px)}
 *{box-sizing:border-box;min-width:0;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:80px;overflow-x:clip}
@@ -25,7 +25,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 :focus-visible{outline:2px solid var(--ac);outline-offset:3px}
 .wrap{max-width:var(--w);margin:0 auto;padding:0 var(--g)}
 .lbl{display:flex;align-items:center;gap:10px;font-size:15.6px;color:var(--mu)}
-.sq{width:9px;height:9px;background:var(--ac);flex:none;box-shadow:2px 2px 0 #6d4b0f}
+.sq{width:9px;height:9px;background:var(--ac);flex:none;box-shadow:2px 2px 0 #7c5d11}
 .sq.p{background:#c40c66;box-shadow:2px 2px 0 #6b0636}
 .sq.w{background:var(--cl);box-shadow:2px 2px 0 #8a8a90}
 h2{font-weight:400;font-size:clamp(30px,4.4vw,58px);line-height:1.08;letter-spacing:-.035em;text-wrap:balance}
@@ -41,8 +41,8 @@ background:var(--cl);color:#0c1d15;box-shadow:0 4px 0 #9a9aa0;transition:transfo
 .key:active{transform:translateY(4px);box-shadow:0 0 0 #9a9aa0}
 .key.d{background:#12291e;color:var(--fg);box-shadow:0 4px 0 #030a06,inset 0 0 0 1px #24493a}
 .key.d:active{box-shadow:0 0 0 #030a06,inset 0 0 0 1px #24493a}
-.key.o{background:var(--ac);color:#0c1d15;box-shadow:0 4px 0 #6d4b0f}
-.key.o:active{box-shadow:0 0 0 #6d4b0f}
+.key.o{background:var(--ac);color:#0c1d15;box-shadow:0 4px 0 #7c5d11}
+.key.o:active{box-shadow:0 0 0 #7c5d11}
 .key svg{width:12px;height:12px;stroke:currentColor;stroke-width:2;fill:none}
 
 /* nav */
@@ -461,7 +461,7 @@ const arrowRows=['........................','........................','........
 
 /* ---------- cube engine (WebGL2, instanced) ---------- */
 const lin=h=>{const n=parseInt(h.slice(1),16);return[(n>>16&255)/255,(n>>8&255)/255,(n&255)/255].map(v=>Math.pow(v,2.2))};
-const PAL={'#':lin('#e2e0e2'),'o':lin('#e09a1f'),'p':lin('#c40c66'),'.':lin('#1d4434')},HEX={'#':'#e2e0e2','o':'#e09a1f','p':'#c40c66','.':'#1d4434'};
+const PAL={'#':lin('#e2e0e2'),'o':lin('#ffbf24'),'p':lin('#c40c66'),'.':lin('#1d4434')},HEX={'#':'#e2e0e2','o':'#ffbf24','p':'#c40c66','.':'#1d4434'};
 const VS=`#version 300 es
 layout(location=0)in vec3 p;layout(location=1)in vec3 n;layout(location=2)in mat4 M;layout(location=6)in vec3 c;
 uniform mat4 VP;out vec3 vN;out vec3 vC;void main(){vN=mat3(M)*n;vC=c;gl_Position=VP*M*vec4(p,1.);}`;
