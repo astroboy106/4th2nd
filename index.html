@@ -606,9 +606,10 @@ addField($('morphCv'),null,{states:morph,period:4200,idle:1e9,spread:2.4,a:.7,pl
  const script=(F,now)=>{if(F.t0==null||S.done)return;const t=(now-F.t0)/1000;F.busy=true;
   if(!S.rev&&t>W0){S.rev=1;F.si=1}
   let left=0;
-  for(const it of F.items){if(it.gx==null){it.gx=Math.round(it.x+(G-1)/2);it.gy=Math.round((G-1)/2-it.y);it.ws=W0+(it.gx/G)*WS+R()*.9+(pd(it.gx,it.gy)<1?.35:0)}
+  for(const it of F.items){if(it.gx==null){it.gx=Math.round(it.x+(G-1)/2);it.gy=Math.round((G-1)/2-it.y);it.ws=W0+Math.hypot(it.gx-11.5,it.gy-11.5)/16.3*WS+R()*1.1}
    if(it.ch===' '&&!it.wind&&it.gone)continue;left++;
-   if(!it.wind&&t>=it.ws){if(it.pb!=null){it.ch=it.pb;it.pb=null}it.f=null;it.gone=1;const tl=TL[it.gy*G+it.gx];if(tl)setTimeout(()=>tl.classList.add('on'),250+R()*350);it.wind={t:now,d:1200+R()*900,dx:10+R()*14,dy:3+R()*7,dz:2+R()*5,r:(R()-.5)*3,r2:(R()-.5)*6,ax:R()<.5?1:0,ph:R()*6};continue}
+   if(it.vf){if(now-it.vf>=1340){it.vf=0;it.f=null;it.ch=' '}continue}
+   if(!it.wind&&!it.gone&&t>=it.ws){if(it.pb!=null){it.ch=it.pb;it.pb=null}const ax=R()<.5?0:1,sg=R()<.5?-1:1;it.f={t:now,ax,sg,ang:Math.PI/2};it.vf=now;it.gone=1;const tl=TL[it.gy*G+it.gx];if(tl){tl.style.setProperty('--r',(ax?'rotateX(':'rotateY(')+(ax?sg:-sg)*-90+'deg)');setTimeout(()=>tl.classList.add('on'),620)}continue}
    if(it.wind||t<it.t0+it.dur*.9||it.f)continue;
    if(it.pb!=null){if(t>it.pe){fl(it,now,it.pb);it.pb=null}continue}
    const inM=mask(it.gx,it.gy,t);
@@ -616,9 +617,9 @@ addField($('morphCv'),null,{states:morph,period:4200,idle:1e9,spread:2.4,a:.7,pl
    else if(!inM&&it.ch!=='.'){if(R()<.25)fl(it,now,'.')}
    else if(inM&&R()<.5)fl(it,now,two())}
   if(t>S.pk&&t<W0+WS){const n=R()<.6?1:2;for(let i=0;i<n;i++){const it=F.items[Math.floor(R()*F.N)];if(it.f||it.pb!=null||it.wind||it.gone||t<it.t0+it.dur)continue;it.pb=it.ch;fl(it,now,'p');it.pe=t+1.4+R()*.4}S.pk=t+1.1+R()*1.3}
-  if(!S.c2&&t>9.0){S.c2=1;c2go()}
+  if(!S.c2&&t>9.6){S.c2=1;c2go()}
   if(t>W0+WS+3)S.done=1};
- addField($('ctaCv'),null,{states:[rows0,blank],once:1,hold:9999,period:100,idle:2400,mix:[['.',50],['o',20],['p',20]],replay:1,spread:2.6,a:.7,place:()=>({fw:.93,fh:.93,ox:0,oy:0}),script,onState:si=>cv.classList.toggle('rev',si===1),onReset:()=>{TL.forEach(x=>x.classList.remove('on'));c2set(false);reset();fields.forEach(F=>F.cv===$('ctaCv')&&F.items.forEach(it=>{it.pb=null;it.wind=null;it.gone=0;it.gx=null}))}})}
+ addField($('ctaCv'),null,{states:[rows0,blank],once:1,hold:9999,period:100,idle:2400,mix:[['.',50],['o',20],['p',20]],replay:1,spread:2.6,a:.7,place:()=>({fw:.93,fh:.93,ox:0,oy:0}),script,onState:si=>cv.classList.toggle('rev',si===1),onReset:()=>{TL.forEach(x=>x.classList.remove('on'));c2set(false);reset();fields.forEach(F=>F.cv===$('ctaCv')&&F.items.forEach(it=>{it.pb=null;it.wind=null;it.gone=0;it.gx=null;it.vf=0}))}})}
 let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{const now=performance.now();fields.forEach(F=>{if(F.t0!=null){layout(F);if(RM)frame(F,now)}});kick()},150)});
 
 /* film wall */
